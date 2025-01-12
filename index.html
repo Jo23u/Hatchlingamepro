@@ -66,13 +66,29 @@
             top: 20px;
             right: 20px;
         }
+
+        .phone {
+            width: 150px;
+            height: 300px;
+            border: 5px solid black;
+            background-color: #ddd;
+            border-radius: 20px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     </style>
 </head>
 <body>
     <h1 style="background: #B8E1FC;
     background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;" >Talking hatchling PRO</h1>
+    -webkit-text-fill-color: transparent;">Talking hatchling PRO</h1>
     <div class="character-container">
         <div id="character" class="character"></div>
         <div class="stats">
@@ -88,16 +104,30 @@
         <button id="shower">Shower</button>
         <button id="toggle-menu">Toggle Menu</button>
         <button id="save-progress">Save Progress</button>
+        <button id="reset-data">Reset Data</button>
+        <button id="show-phone">Show Phone</button> <!-- Added phone show button -->
     </div>
 
     <div class="menu" id="menu">
         <p>Hello dear player, this is the main menu!</p>
+        <input type="text" id="player-name" placeholder="Enter your name">
+        <button id="save-name">Save Name</button>
+        <div id="leaderboard">
+            <h3>Leaderboard</h3>
+            <div id="leaderboard-entries"></div>
+        </div>
         <a href="./CHRlink.html">
             <button>Characters</button>
-            </a>
-            <br>
-            <a href="https://jo23u.github.io/hatchlingnew/" >classic version</a>
-            <a href="https://jo23u.github.io/hatchlingnew/hatchlingame+.html" >plus version</a>
+        </a>
+        <br>
+        <a href="https://jo23u.github.io/hatchlingnew/">Classic version</a>
+        <a href="https://jo23u.github.io/hatchlingnew/hatchlingame+.html">Plus version</a>
+    </div>
+
+    <div class="phone" id="phone">
+        <p>Click below to earn apples!</p>
+        <button id="earn-apples">Earn Apples</button>
+        <button id="close-phone">Close Phone</button>
     </div>
 
     <script>
@@ -109,16 +139,21 @@
         const applesEl = document.getElementById('apples');
         const levelEl = document.getElementById('level');
         const menu = document.getElementById('menu');
-
+        const leaderboardEntries = document.getElementById('leaderboard-entries');
+        const playerNameInput = document.getElementById('player-name');
+        const phone = document.getElementById('phone');
+        const showPhoneButton = document.getElementById('show-phone');
+        const closePhoneButton = document.getElementById('close-phone');
+        
         let hunger = 100;
         let cleanliness = 100;
         let happiness = 100;
         let coins = 0;
         let apples = 0;
         let level = 1;
-        let patCooldown = false;
+        let playerName = '';
+        let leaderboard = [];
 
-        // Update stats UI
         function updateStats() {
             hungerEl.textContent = hunger;
             cleanlinessEl.textContent = cleanliness;
@@ -134,7 +169,6 @@
             }
         }
 
-        // Feeding apples
         document.getElementById('feed').addEventListener('click', () => {
             if (apples > 0) {
                 apples--;
@@ -147,36 +181,12 @@
             }
         });
 
-        // Patting the character
-        character.addEventListener('click', () => {
-            if (!patCooldown) {
-                patCooldown = true;
-                happiness += 10;
-                if (happiness > 100) happiness = 100;
-                const patSound = new Audio('Yay - Sound Effect.mp3');
-                patSound.play();
-                updateStats();
-
-                // Bounce animation
-                character.style.transform = "translateY(-20px)";
-                setTimeout(() => {
-                    character.style.transform = "translateY(0)";
-                }, 200);
-
-                setTimeout(() => {
-                    patCooldown = false;
-                }, 1000); // 1 second cooldown
-            }
-        });
-
-        // Showering to increase cleanliness
         document.getElementById('shower').addEventListener('click', () => {
             cleanliness += 20;
             if (cleanliness > 100) cleanliness = 100;
             updateStats();
         });
 
-        // Opening the chest
         document.getElementById('open-chest').addEventListener('click', () => {
             if (coins >= 10) {
                 coins -= 10;
@@ -189,33 +199,44 @@
             }
         });
 
-        // Toggle menu visibility
         document.getElementById('toggle-menu').addEventListener('click', () => {
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
         });
 
-        // Saving progress
+        document.getElementById('save-name').addEventListener('click', () => {
+            if (playerNameInput.value && !leaderboard.some(player => player.name === playerNameInput.value)) {
+                playerName = playerNameInput.value;
+                leaderboard.push({ name: playerName });
+                updateLeaderboard();
+                localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+            } else {
+                alert('You can only appear once on the leaderboard!');
+            }
+        });
+
         document.getElementById('save-progress').addEventListener('click', () => {
             localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level }));
             alert('Progress saved!');
         });
 
-        // Load saved progress
         window.onload = () => {
             const savedData = JSON.parse(localStorage.getItem('characterGame'));
             if (savedData) {
                 ({ hunger, cleanliness, happiness, coins, apples, level } = savedData);
                 updateStats();
             }
+            const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
+            if (savedLeaderboard) {
+                leaderboard = savedLeaderboard;
+                updateLeaderboard();
+            }
         };
 
-        // Daily coins system
         setInterval(() => {
             coins += 90;
             updateStats();
-        }, 60000); // 1 minute
+        }, 60000); 
 
-        // Gradual stat decrease
         setInterval(() => {
             hunger--;
             cleanliness--;
@@ -224,7 +245,79 @@
             if (cleanliness < 0) cleanliness = 0;
             if (happiness < 0) happiness = 0;
             updateStats();
-        }, 5000); // Every 5 seconds
+        }, 5000); 
+
+        document.getElementById('reset-data').addEventListener('click', () => {
+            const confirmReset = confirm('Are you sure you want to reset all your data?');
+            if (confirmReset) {
+                hunger = 100;
+                cleanliness = 100;
+                happiness = 100;
+                coins = 0;
+                apples = 0;
+                level = 1;
+                leaderboard = [];
+                localStorage.removeItem('characterGame');
+                localStorage.removeItem('leaderboard');
+                updateStats();
+                updateLeaderboard();
+                alert('Data reset successfully!');
+            }
+        });
+
+        function updateLeaderboard() {
+            leaderboardEntries.innerHTML = '';
+            leaderboard.forEach(player => {
+                const entry = document.createElement('div');
+                entry.textContent = `${player.name} -`;
+                leaderboardEntries.appendChild(entry);
+            });
+        }
+
+        document.getElementById('earn-apples').addEventListener('click', () => {
+            apples++;
+            updateStats();
+        });
+
+        showPhoneButton.addEventListener('click', () => {
+            phone.style.display = 'flex';
+        });
+
+        closePhoneButton.addEventListener('click', () => {
+            phone.style.display = 'none';
+        });
+
+        let patCooldown = false; // Flag for patting cooldown
+
+character.addEventListener('click', () => {
+    if (!patCooldown) {
+        patCooldown = true;
+
+        // Increase happiness by 10, but not above 100
+        happiness += 10;
+        if (happiness > 100) happiness = 100;
+        updateStats(); // Update the stats after increasing happiness
+
+        // Bounce animation
+        character.style.transform = "translateY(-20px)";
+        setTimeout(() => {
+            character.style.transform = "translateY(0)";
+        }, 200);
+
+        // Play pat sound
+        new Audio('Yay - Sound Effect.mp3').play();
+
+        // Set cooldown for 1 second
+        setTimeout(() => {
+            patCooldown = false;
+        }, 1000); // 1000 ms = 1 second cooldown
+    }
+});
+
+
+
+        // Leaderboard limit check
     </script>
 </body>
 </html>
+
