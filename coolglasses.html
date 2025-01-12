@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talking hatchling pro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .character-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .character {
+            width: 150px;
+            height: 150px;
+            background-image: url('./Picsart_25-01-12_11-37-22-100.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            transition: background-image 0.3s;
+        }
+
+        .stats {
+            margin-bottom: 10px;
+        }
+
+        .stat {
+            margin: 5px 0;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .menu {
+            display: none;
+            background: #ffffff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="background: #B8E1FC;
+    background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;" >Talking hatchling PRO (glasses)</h1>
+    <div class="character-container">
+        <div id="character" class="character"></div>
+        <div class="stats">
+            <div class="stat">Hunger: <span id="hunger">100</span></div>
+            <div class="stat">Cleanliness: <span id="cleanliness">100</span></div>
+            <div class="stat">Happiness: <span id="happiness">100</span></div>
+            <div class="stat">Coins: <span id="coins">0</span></div>
+            <div class="stat">Apples: <span id="apples">0</span></div>
+            <div class="stat">Level: <span id="level">1</span></div>
+        </div>
+        <button id="feed">Feed Apple</button>
+        <button id="open-chest">Open Chest (-10 Coins)</button>
+        <button id="shower">Shower</button>
+        <button id="toggle-menu">Toggle Menu</button>
+        <button id="save-progress">Save Progress</button>
+    </div>
+
+    <div class="menu" id="menu">
+        <p>Hello dear player, this is the main menu!</p>
+        <a href="./index.html">
+            <button>Click here to go back</button>
+            </a>
+    </div>
+
+    <script>
+        const character = document.getElementById('character');
+        const hungerEl = document.getElementById('hunger');
+        const cleanlinessEl = document.getElementById('cleanliness');
+        const happinessEl = document.getElementById('happiness');
+        const coinsEl = document.getElementById('coins');
+        const applesEl = document.getElementById('apples');
+        const levelEl = document.getElementById('level');
+        const menu = document.getElementById('menu');
+
+        let hunger = 100;
+        let cleanliness = 100;
+        let happiness = 100;
+        let coins = 0;
+        let apples = 0;
+        let level = 1;
+        let patCooldown = false;
+
+        // Update stats UI
+        function updateStats() {
+            hungerEl.textContent = hunger;
+            cleanlinessEl.textContent = cleanliness;
+            happinessEl.textContent = happiness;
+            coinsEl.textContent = coins;
+            applesEl.textContent = apples;
+            levelEl.textContent = level;
+
+            if (hunger < 10 || cleanliness < 10 || happiness < 10) {
+                character.style.backgroundImage = "url('Picsart_25-01-12_11-53-23-856.png')";
+            } else {
+                character.style.backgroundImage = "url('Picsart_25-01-12_11-37-22-100.png')";
+            }
+        }
+
+        // Feeding apples
+        document.getElementById('feed').addEventListener('click', () => {
+            if (apples > 0) {
+                apples--;
+                hunger += 10;
+                if (hunger > 100) hunger = 100;
+                level++;
+                updateStats();
+            } else {
+                alert('You have no apples!');
+            }
+        });
+
+        // Patting the character
+        character.addEventListener('click', () => {
+            if (!patCooldown) {
+                patCooldown = true;
+                happiness += 10;
+                if (happiness > 100) happiness = 100;
+                const patSound = new Audio('Yay - Sound Effect.mp3');
+                patSound.play();
+                updateStats();
+
+                setTimeout(() => {
+                    patCooldown = false;
+                }, 1000); // 1 second cooldown
+            }
+        });
+
+        // Showering to increase cleanliness
+        document.getElementById('shower').addEventListener('click', () => {
+            cleanliness += 20;
+            if (cleanliness > 100) cleanliness = 100;
+            updateStats();
+        });
+
+        // Opening the chest
+        document.getElementById('open-chest').addEventListener('click', () => {
+            if (coins >= 10) {
+                coins -= 10;
+                const reward = Math.floor(Math.random() * 11) + 10;
+                apples += reward;
+                alert(`You received ${reward} apples!`);
+                updateStats();
+            } else {
+                alert('Not enough coins!');
+            }
+        });
+
+        // Toggle menu visibility
+        document.getElementById('toggle-menu').addEventListener('click', () => {
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Saving progress
+        document.getElementById('save-progress').addEventListener('click', () => {
+            localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level }));
+            alert('Progress saved!');
+        });
+
+        // Load saved progress
+        window.onload = () => {
+            const savedData = JSON.parse(localStorage.getItem('characterGame'));
+            if (savedData) {
+                ({ hunger, cleanliness, happiness, coins, apples, level } = savedData);
+                updateStats();
+            }
+        };
+
+        // Daily coins system
+        setInterval(() => {
+            coins += 90;
+            updateStats();
+        }, 60000); // 1 minute
+
+        // Gradual stat decrease
+        setInterval(() => {
+            hunger--;
+            cleanliness--;
+            happiness--;
+            if (hunger < 0) hunger = 0;
+            if (cleanliness < 0) cleanliness = 0;
+            if (happiness < 0) happiness = 0;
+            updateStats();
+        }, 5000); // Every 5 seconds
+    </script>
+</body>
+</html>
