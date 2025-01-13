@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Talking hatchling pro</title>
+    <title>Talking Hatchling Pro</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -65,6 +65,7 @@
             position: fixed;
             top: 20px;
             right: 20px;
+            z-index: 100;
         }
 
         .phone {
@@ -82,13 +83,19 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
+        iframe {
+            width: 300px;
+            height: 200px;
+        }
     </style>
 </head>
 <body>
     <h1 style="background: #B8E1FC;
     background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;">Talking hatchling PRO</h1>
+    -webkit-text-fill-color: transparent;">Talking Hatchling PRO</h1>
+
     <div class="character-container">
         <div id="character" class="character"></div>
         <div class="stats">
@@ -105,7 +112,7 @@
         <button id="toggle-menu">Toggle Menu</button>
         <button id="save-progress">Save Progress</button>
         <button id="reset-data">Reset Data</button>
-        <button id="show-phone">Show Phone</button> <!-- Added phone show button -->
+        <button id="show-phone">Show Phone</button>
     </div>
 
     <div class="menu" id="menu">
@@ -115,6 +122,7 @@
         <div id="leaderboard">
             <h3>Leaderboard</h3>
             <div id="leaderboard-entries"></div>
+            <p>Please notice leaderboard is broken! it will be fixed soon</p>
         </div>
         <a href="./CHRlink.html">
             <button>Characters</button>
@@ -122,6 +130,10 @@
         <br>
         <a href="https://jo23u.github.io/hatchlingnew/">Classic version</a>
         <a href="https://jo23u.github.io/hatchlingnew/hatchlingame+.html">Plus version</a>
+        <h3>Watch this video if you want!</h3>
+        <iframe id="reward-video" width="560" height="315" src="https://www.youtube.com/embed/U6ULeO8X1dI?enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <!-- Claim coins button -->
+        <button id="claim-coins" style="display: none;">Claim 2000 Coins</button>
     </div>
 
     <div class="phone" id="phone">
@@ -131,193 +143,223 @@
     </div>
 
     <script>
-        const character = document.getElementById('character');
-        const hungerEl = document.getElementById('hunger');
-        const cleanlinessEl = document.getElementById('cleanliness');
-        const happinessEl = document.getElementById('happiness');
-        const coinsEl = document.getElementById('coins');
-        const applesEl = document.getElementById('apples');
-        const levelEl = document.getElementById('level');
-        const menu = document.getElementById('menu');
-        const leaderboardEntries = document.getElementById('leaderboard-entries');
-        const playerNameInput = document.getElementById('player-name');
-        const phone = document.getElementById('phone');
-        const showPhoneButton = document.getElementById('show-phone');
-        const closePhoneButton = document.getElementById('close-phone');
-        
-        let hunger = 100;
-        let cleanliness = 100;
-        let happiness = 100;
-        let coins = 0;
-        let apples = 0;
-        let level = 1;
-        let playerName = '';
-        let leaderboard = [];
+    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1;
+    let playerName = '', leaderboard = [];
+    let videoPlayer;
 
-        function updateStats() {
-            hungerEl.textContent = hunger;
-            cleanlinessEl.textContent = cleanliness;
-            happinessEl.textContent = happiness;
-            coinsEl.textContent = coins;
-            applesEl.textContent = apples;
-            levelEl.textContent = level;
-
-            if (hunger < 10 || cleanliness < 10 || happiness < 10) {
-                character.style.backgroundImage = "url('Picsart_25-01-10_00-23-56-807.png')";
-            } else {
-                character.style.backgroundImage = "url('dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png')";
+    // Initialize YouTube Player API
+    function onYouTubePlayerAPIReady() {
+        videoPlayer = new YT.Player('reward-video', {
+            events: {
+                'onStateChange': onPlayerStateChange
             }
+        });
+    }
+
+    // Track the player's video state (playing, paused, etc.)
+    function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.PLAYING) {
+            let checkTimeInterval = setInterval(() => {
+                let currentTime = videoPlayer.getCurrentTime();
+                if (currentTime >= 30) {
+                    document.getElementById('claim-coins').style.display = 'block';
+                    clearInterval(checkTimeInterval);
+                }
+            }, 1000);
+        }
+    }
+
+    // Handle claim coins button click
+    document.getElementById('claim-coins').addEventListener('click', () => {
+        coins += 2000;
+        alert('You have claimed 2000 coins!');
+        document.getElementById('claim-coins').style.display = 'none';
+        updateStats();
+    });
+
+    function updateStats() {
+        document.getElementById('hunger').textContent = hunger;
+        document.getElementById('cleanliness').textContent = cleanliness;
+        document.getElementById('happiness').textContent = happiness;
+        document.getElementById('coins').textContent = coins;
+        document.getElementById('apples').textContent = apples;
+        document.getElementById('level').textContent = level;
+
+        if (hunger < 10 || cleanliness < 10 || happiness < 10) {
+            document.getElementById('character').style.backgroundImage = "url('Picsart_25-01-10_00-23-56-807.png')";
+        } else {
+            document.getElementById('character').style.backgroundImage = "url('dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png')";
+        }
+    }
+
+    document.getElementById('feed').addEventListener('click', () => {
+        if (apples > 0) {
+            apples--;
+            hunger += 10;
+            if (hunger > 100) hunger = 100;
+            level++;
+            updateStats();
+        } else {
+            alert('You have no apples!');
+        }
+    });
+
+    document.getElementById('shower').addEventListener('click', () => {
+        cleanliness += 20;
+        if (cleanliness > 100) cleanliness = 100;
+        updateStats();
+    });
+
+    document.getElementById('open-chest').addEventListener('click', () => {
+        if (coins >= 10) {
+            coins -= 10;
+            const reward = Math.floor(Math.random() * 11) + 10;
+            apples += reward;
+            alert(`You received ${reward} apples!`);
+            updateStats();
+        } else {
+            alert('Not enough coins!');
+        }
+    });
+
+    document.getElementById('toggle-menu').addEventListener('click', () => {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.getElementById('save-name').addEventListener('click', () => {
+        if (playerNameInput.value && !leaderboard.some(player => player.name === playerNameInput.value)) {
+            playerName = playerNameInput.value;
+            leaderboard.push({ name: playerName });
+            updateLeaderboard();
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+        } else {
+            alert('You can only appear once on the leaderboard!');
+        }
+    });
+
+    document.getElementById('save-progress').addEventListener('click', () => {
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level }));
+        alert('Progress saved!');
+    });
+
+    window.onload = () => {
+        const savedData = JSON.parse(localStorage.getItem('characterGame'));
+        if (savedData) {
+            ({ hunger, cleanliness, happiness, coins, apples, level } = savedData);
+            updateStats();
+        }
+        const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
+        if (savedLeaderboard) {
+            leaderboard = savedLeaderboard;
+            updateLeaderboard();
         }
 
-        document.getElementById('feed').addEventListener('click', () => {
-            if (apples > 0) {
-                apples--;
-                hunger += 10;
-                if (hunger > 100) hunger = 100;
-                level++;
-                updateStats();
-            } else {
-                alert('You have no apples!');
-            }
-        });
+        // Initialize the YouTube Player API
+        const scriptTag = document.createElement('script');
+        scriptTag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(scriptTag);
+    };
 
-        document.getElementById('shower').addEventListener('click', () => {
-            cleanliness += 20;
-            if (cleanliness > 100) cleanliness = 100;
+    setInterval(() => {
+        coins += 90;
+        updateStats();
+    }, 60000); 
+
+    setInterval(() => {
+        hunger--;
+        cleanliness--;
+        happiness--;
+        if (hunger < 0) hunger = 0;
+        if (cleanliness < 0) cleanliness = 0;
+        if (happiness < 0) happiness = 0;
+        updateStats();
+    }, 5000);
+
+    document.getElementById('reset-data').addEventListener('click', () => {
+        const confirmReset = confirm('Are you sure you want to reset all your data?');
+        if (confirmReset) {
+            hunger = 100;
+            cleanliness = 100;
+            happiness = 100;
+            coins = 0;
+            apples = 0;
+            level = 1;
+            leaderboard = [];
+            localStorage.removeItem('characterGame');
+            localStorage.removeItem('leaderboard');
             updateStats();
-        });
-
-        document.getElementById('open-chest').addEventListener('click', () => {
-            if (coins >= 10) {
-                coins -= 10;
-                const reward = Math.floor(Math.random() * 11) + 10;
-                apples += reward;
-                alert(`You received ${reward} apples!`);
-                updateStats();
-            } else {
-                alert('Not enough coins!');
-            }
-        });
-
-        document.getElementById('toggle-menu').addEventListener('click', () => {
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.getElementById('save-name').addEventListener('click', () => {
-            if (playerNameInput.value && !leaderboard.some(player => player.name === playerNameInput.value)) {
-                playerName = playerNameInput.value;
-                leaderboard.push({ name: playerName });
-                updateLeaderboard();
-                localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-            } else {
-                alert('You can only appear once on the leaderboard!');
-            }
-        });
-
-        document.getElementById('save-progress').addEventListener('click', () => {
-            localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level }));
-            alert('Progress saved!');
-        });
-
-        window.onload = () => {
-            const savedData = JSON.parse(localStorage.getItem('characterGame'));
-            if (savedData) {
-                ({ hunger, cleanliness, happiness, coins, apples, level } = savedData);
-                updateStats();
-            }
-            const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
-            if (savedLeaderboard) {
-                leaderboard = savedLeaderboard;
-                updateLeaderboard();
-            }
-        };
-
-        setInterval(() => {
-            coins += 90;
-            updateStats();
-        }, 60000); 
-
-        setInterval(() => {
-            hunger--;
-            cleanliness--;
-            happiness--;
-            if (hunger < 0) hunger = 0;
-            if (cleanliness < 0) cleanliness = 0;
-            if (happiness < 0) happiness = 0;
-            updateStats();
-        }, 5000); 
-
-        document.getElementById('reset-data').addEventListener('click', () => {
-            const confirmReset = confirm('Are you sure you want to reset all your data?');
-            if (confirmReset) {
-                hunger = 100;
-                cleanliness = 100;
-                happiness = 100;
-                coins = 0;
-                apples = 0;
-                level = 1;
-                leaderboard = [];
-                localStorage.removeItem('characterGame');
-                localStorage.removeItem('leaderboard');
-                updateStats();
-                updateLeaderboard();
-                alert('Data reset successfully!');
-            }
-        });
-
-        function updateLeaderboard() {
-            leaderboardEntries.innerHTML = '';
-            leaderboard.forEach(player => {
-                const entry = document.createElement('div');
-                entry.textContent = `${player.name} -`;
-                leaderboardEntries.appendChild(entry);
-            });
+            updateLeaderboard();
+            alert('Data reset successfully!');
         }
+    });
 
-        document.getElementById('earn-apples').addEventListener('click', () => {
+    function updateLeaderboard() {
+        leaderboardEntries.innerHTML = '';
+        leaderboard.forEach(player => {
+            const entry = document.createElement('div');
+            entry.textContent = `${player.name} -`;
+            leaderboardEntries.appendChild(entry);
+        });
+    }
+
+    document.getElementById('earn-apples').addEventListener('click', () => {
+        const earnApplesButton = document.getElementById('earn-apples');
+        if (!earnApplesButton.disabled) {
             apples++;
             updateStats();
-        });
+            earnApplesButton.disabled = true;
+            earnApplesButton.textContent = "Cooldown (30s)";
+            let cooldownTime = 30;
 
-        showPhoneButton.addEventListener('click', () => {
-            phone.style.display = 'flex';
-        });
+            const cooldownInterval = setInterval(() => {
+                cooldownTime--;
+                earnApplesButton.textContent = `Cooldown (${cooldownTime}s)`;
+                if (cooldownTime <= 0) {
+                    clearInterval(cooldownInterval);
+                    earnApplesButton.disabled = false;
+                    earnApplesButton.textContent = "Earn Apples";
+                }
+            }, 1000);
+        }
+    });
 
-        closePhoneButton.addEventListener('click', () => {
-            phone.style.display = 'none';
-        });
+    const showPhoneButton = document.getElementById('show-phone');
+    const closePhoneButton = document.getElementById('close-phone');
+    const phone = document.getElementById('phone');
 
-        let patCooldown = false; // Flag for patting cooldown
+    showPhoneButton.addEventListener('click', () => {
+        phone.style.display = 'flex';
+    });
 
-character.addEventListener('click', () => {
-    if (!patCooldown) {
-        patCooldown = true;
+    closePhoneButton.addEventListener('click', () => {
+        phone.style.display = 'none';
+    });
 
-        // Increase happiness by 10, but not above 100
-        happiness += 10;
-        if (happiness > 100) happiness = 100;
-        updateStats(); // Update the stats after increasing happiness
+    let patCooldown = false;
 
-        // Bounce animation
-        character.style.transform = "translateY(-20px)";
-        setTimeout(() => {
-            character.style.transform = "translateY(0)";
-        }, 200);
+    const character = document.getElementById('character');
 
-        // Play pat sound
-        new Audio('Yay - Sound Effect.mp3').play();
-
-        // Set cooldown for 1 second
-        setTimeout(() => {
-            patCooldown = false;
-        }, 1000); // 1000 ms = 1 second cooldown
-    }
-});
-
-
-
-        // Leaderboard limit check
-    </script>
+    character.addEventListener('click', () => {
+        if (!patCooldown) {
+            patCooldown = true;
+            happiness += 10;
+            if (happiness > 100) happiness = 100;
+            updateStats();
+            character.style.transform = "translateY(-20px)";
+            setTimeout(() => {
+                character.style.transform = "translateY(0)";
+            }, 200);
+            new Audio('Yay - Sound Effect.mp3').play();
+            setTimeout(() => {
+                patCooldown = false;
+            }, 1000);
+        }
+    });
+</script>
+<p style="background: #B8E1FC;
+background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;" >V3 (prev version V2)</p>
 </body>
 </html>
 
