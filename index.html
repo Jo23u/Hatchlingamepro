@@ -133,7 +133,7 @@
         <h3>Watch this video if you want!</h3>
         <iframe id="reward-video" width="560" height="315" src="https://www.youtube.com/embed/U6ULeO8X1dI?enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <!-- Claim coins button -->
-        <button id="claim-coins" style="display: none;">Claim 2000 Coins</button>
+        <button id="claim-coins" style="display: none;">Claim 200 Coins</button>
     </div>
 
     <div class="phone" id="phone">
@@ -145,37 +145,41 @@
     <script>
     let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1;
     let playerName = '', leaderboard = [];
-    let videoPlayer;
-
-    // Initialize YouTube Player API
-    function onYouTubePlayerAPIReady() {
-        videoPlayer = new YT.Player('reward-video', {
-            events: {
-                'onStateChange': onPlayerStateChange
-            }
-        });
-    }
-
-    // Track the player's video state (playing, paused, etc.)
-    function onPlayerStateChange(event) {
-        if (event.data === YT.PlayerState.PLAYING) {
-            let checkTimeInterval = setInterval(() => {
-                let currentTime = videoPlayer.getCurrentTime();
-                if (currentTime >= 30) {
-                    document.getElementById('claim-coins').style.display = 'block';
-                    clearInterval(checkTimeInterval);
-                }
-            }, 1000);
+// Initialize YouTube Player API
+function onYouTubePlayerAPIReady() {
+    videoPlayer = new YT.Player('reward-video', {
+        events: {
+            'onStateChange': onPlayerStateChange
         }
-    }
-
-    // Handle claim coins button click
-    document.getElementById('claim-coins').addEventListener('click', () => {
-        coins += 2000;
-        alert('You have claimed 2000 coins!');
-        document.getElementById('claim-coins').style.display = 'none';
-        updateStats();
     });
+}
+
+// Track the player's video state (playing, paused, etc.)
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+        let checkTimeInterval = setInterval(() => {
+            let currentTime = videoPlayer.getCurrentTime();
+            if (currentTime >= 45) { // Reward after 45 seconds
+                document.getElementById('claim-coins').style.display = 'block'; // Show the claim button
+                clearInterval(checkTimeInterval); // Stop checking the time once the condition is met
+            }
+        }, 1000);
+    }
+}
+
+// Handle claim coins button click
+document.getElementById('claim-coins').addEventListener('click', () => {
+    coins += 200; // Add 200 coins to the user's total
+    alert('You have claimed 200 coins!'); // Notify the user
+    document.getElementById('claim-coins').style.display = 'none'; // Hide the claim button after claiming
+    updateStats(); // Update the stats
+});
+
+// Initialize the YouTube Player API
+const scriptTag = document.createElement('script');
+scriptTag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(scriptTag);
+
 
     function updateStats() {
         document.getElementById('hunger').textContent = hunger;
@@ -253,12 +257,9 @@
             leaderboard = savedLeaderboard;
             updateLeaderboard();
         }
+    }
 
-        // Initialize the YouTube Player API
-        const scriptTag = document.createElement('script');
-        scriptTag.src = "https://www.youtube.com/iframe_api";
-        document.body.appendChild(scriptTag);
-    };
+        
 
     setInterval(() => {
         coins += 90;
@@ -362,4 +363,5 @@ background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%,
 -webkit-text-fill-color: transparent;" >V3 (prev version V2)</p>
 </body>
 </html>
+
 
