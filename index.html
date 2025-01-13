@@ -33,6 +33,8 @@
             transition: background-image 0.3s, transform 0.2s;
         }
 
+        
+
         .stats {
             margin-bottom: 10px;
         }
@@ -88,6 +90,26 @@
             width: 300px;
             height: 200px;
         }
+
+        .background-menu {
+    background: #fff;
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+}
+
+@media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+                background-color: lightblue;
+                color: red;
+            }
+        }
     </style>
 </head>
 <body>
@@ -113,9 +135,22 @@
         <button id="save-progress">Save Progress</button>
         <button id="reset-data">Reset Data</button>
         <button id="show-phone">Show Phone</button>
+        <button id="show-background">Show Background</button>
+        <button id="reset-background">Reset Background</button>
+
     </div>
 
+    <div class="background-menu" id="background-menu" style="display: none;">
+        <p>Choose a background:</p>
+        <button id="background-1">City</button>
+        <button id="background-2">Playground</button>
+        <button id="background-3">Forest</button>
+        <button id="background-4">White wall</button>
+    </div>
+    
+
     <div class="menu" id="menu">
+        <button id="close-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
         <p>Hello dear player, this is the main menu!</p>
         <input type="text" id="player-name" placeholder="Enter your name">
         <button id="save-name">Save Name</button>
@@ -134,6 +169,9 @@
         <iframe id="reward-video" width="560" height="315" src="https://www.youtube.com/embed/U6ULeO8X1dI?enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         <!-- Claim coins button -->
         <button id="claim-coins" style="display: none;">Claim 200 Coins</button>
+        <div>
+            <p>if the text is red you are on a small sized screen, if the text is black you are on a normal sized screen.</p>
+        </div>
     </div>
 
     <div class="phone" id="phone">
@@ -356,12 +394,59 @@ document.body.appendChild(scriptTag);
             }, 1000);
         }
     });
+
+    // Handle the Show Background Button click
+document.getElementById('show-background').addEventListener('click', () => {
+    const backgroundMenu = document.getElementById('background-menu');
+    backgroundMenu.style.display = backgroundMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+// Handle background changes
+document.getElementById('background-1').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('original-232adf446d5619c49c4ffb6247751762.webp')";
+    document.getElementById('background-menu').style.display = 'none';
+});
+
+document.getElementById('background-2').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('1oh3prd5lsr71.webp')";
+    document.getElementById('background-menu').style.display = 'none';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+});
+
+document.getElementById('background-3').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('ai-generated-ai-generative-outdoor-nature-adventure-forest-walk-path-road-adventures-background-graphic-art-photo.jpg')";
+    document.getElementById('background-menu').style.display = 'none';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+});
+
+document.getElementById('background-4').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('white-cement-wall-texture-backgrounds_707519-24233.avif')";
+    document.getElementById('background-menu').style.display = 'none';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+});
+
+// Handle the Reset Background Button click
+document.getElementById('reset-background').addEventListener('click', () => {
+    document.body.style.backgroundImage = ''; // Reset the background image
+    document.getElementById('background-menu').style.display = 'none'; // Hide the background menu
+});
+
+document.getElementById('close-menu').addEventListener('click', () => {
+    document.getElementById('menu').style.display = 'none';
+});
+
+
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V3 (prev version V2)</p>
+-webkit-text-fill-color: transparent;" >V4 (prev version V3)</p>
 </body>
 </html>
-
 
