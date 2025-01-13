@@ -110,7 +110,7 @@
         let hunger = 100;
         let cleanliness = 100;
         let happiness = 100;
-        let coins = 0;
+        let coins = 1000;
         let apples = 0;
         let level = 1;
         let patCooldown = false;
@@ -208,7 +208,7 @@
 
         // Daily coins system
         setInterval(() => {
-            coins += 9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000;
+            coins += 0.1 ;
             updateStats();
         }, 1000); // 1 minute
 
