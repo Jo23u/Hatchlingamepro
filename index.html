@@ -110,6 +110,42 @@
                 color: red;
             }
         }
+
+        #shopMenu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 2px solid black;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+#toggleShopMenu {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#toggleShopMenu:hover {
+    background-color: #005f75;
+}
+
+#shopFeedback {
+    margin-top: 10px;
+    font-size: 14px;
+    color: green;
+}
+
     </style>
 </head>
 <body>
@@ -137,6 +173,8 @@
         <button id="show-phone">Show Phone</button>
         <button id="show-background">Show Background</button>
         <button id="reset-background">Reset Background</button>
+        <button id="toggleShopMenu">Shop</button>
+        <button id="NTC">Notice</button>
 
     </div>
 
@@ -180,9 +218,29 @@
         <button id="close-phone">Close Phone</button>
     </div>
 
+    <div id="shopMenu" style="display: none;">
+        <button id="close-men1" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+        <button id="buyBoostPotion">Buy Boost Potion (30 Coins)</button>
+        <!-- Inside your Shop Menu -->
+<button id="infinite-states-button">Enable Infinite States (900,000 coins)</button>
+
+        <p id="shopFeedback"></p>
+    </div>
+
+    <div id="NTCM" style="display: none;">
+        <!-- Your editable content goes here -->
+        <h2>Notice</h2>
+        <p>Please make sure you save your data after buying or purchasing anything, after you save your data your data is safely stored in localstorage
+            and even is there is an update it will still remain as it is.
+        </p>
+    </div>
+
     <script>
     let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1;
     let playerName = '', leaderboard = [];
+    let infiniteStates = false; // Initially set to false
+    let stateDecrementInterval;
+
 // Initialize YouTube Player API
 function onYouTubePlayerAPIReady() {
     videoPlayer = new YT.Player('reward-video', {
@@ -305,14 +363,16 @@ document.body.appendChild(scriptTag);
     }, 60000); 
 
     setInterval(() => {
+    if (!infiniteStates) {  // Only decrement if infiniteStates is false
         hunger--;
         cleanliness--;
         happiness--;
         if (hunger < 0) hunger = 0;
         if (cleanliness < 0) cleanliness = 0;
         if (happiness < 0) happiness = 0;
-        updateStats();
-    }, 5000);
+        updateStats();  // Call the updateStats function to reflect the changes
+    }
+}, 5000);  // Adjust this interval as per your game needs
 
     document.getElementById('reset-data').addEventListener('click', () => {
         const confirmReset = confirm('Are you sure you want to reset all your data?');
@@ -441,12 +501,87 @@ document.getElementById('close-menu').addEventListener('click', () => {
     document.getElementById('menu').style.display = 'none';
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleShopMenu = document.getElementById("toggleShopMenu");
+    const shopMenu = document.getElementById("shopMenu");
+    const buyBoostPotion = document.getElementById("buyBoostPotion");
+    const shopFeedback = document.getElementById("shopFeedback");
+
+    let boostCooldown = false;
+
+    // Toggle shop menu visibility
+    toggleShopMenu.addEventListener("click", () => {
+        shopMenu.style.display = shopMenu.style.display === "none" ? "block" : "none";
+    });
+
+    // Purchase boost potion
+    buyBoostPotion.addEventListener("click", () => {
+        if (boostCooldown) {
+            shopFeedback.textContent = "Potion is on cooldown. Please wait!";
+            return;
+        }
+
+        if (coins >= 30) { // Assuming 'coins' is a global variable in your existing code
+            coins -= 30;
+            shopFeedback.textContent = "Boost potion activated! All stats increased.";
+            boostCooldown = true;
+
+            // Directly update game stats (replace these with your actual game variables)
+            hunger = Math.min(hunger + 30, 100); // Replace 'hunger' with your variable
+            cleanliness = Math.min(cleanliness + 30, 100); // Replace 'cleanliness' with your variable
+            happiness = Math.min(happiness + 30, 100); // Replace 'happiness' with your variable
+
+            // Optionally log updated values for debugging
+            console.log("Updated stats: ", { hunger, cleanliness, happiness });
+
+            // Start cooldown timer
+            setTimeout(() => {
+                boostCooldown = false;
+                shopFeedback.textContent = "";
+            }, 2 * 60 * 1000); // 2 minutes cooldown
+        } else {
+            shopFeedback.textContent = "Not enough coins to buy the potion.";
+        }
+    });
+});
+
+
+document.getElementById('close-men1').addEventListener('click', () => {
+    document.getElementById('shopMenu').style.display = 'none';
+});
+
+
+document.getElementById('infinite-states-button').addEventListener('click', () => {
+    if (coins >= 900000 && !infiniteStates) {
+        coins -= 900000;
+        infiniteStates = true;
+        alert('Infinite states enabled! Stats will no longer decrease.');
+        updateStats();  // Update stats to reflect the change in state
+    } else {
+        alert('You dont have enough coins!');
+    }
+});
+
+// Get the button and the menu
+const toggleMenuButton = document.getElementById('NTC');
+const customMenu = document.getElementById('NTCM');
+
+// Add the event listener to toggle the menu visibility
+toggleMenuButton.addEventListener('click', () => {
+    // Toggle the menu's display between 'none' and 'block'
+    if (customMenu.style.display === 'none' || customMenu.style.display === '') {
+        customMenu.style.display = 'block';
+    } else {
+        customMenu.style.display = 'none';
+    }
+});
+
 
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V4 (prev version V3)</p>
+-webkit-text-fill-color: transparent;" >V5 beta (prev version V4)</p>
 </body>
 </html>
 
