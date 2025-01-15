@@ -378,7 +378,7 @@
 </div>
 
     <script>
-    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1;
+    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0;
     let playerName = '', leaderboard = [];
     let infiniteStates = false; // Initially set to false
     let stateDecrementInterval;
@@ -425,7 +425,7 @@ document.body.appendChild(scriptTag);
         document.getElementById('happiness').textContent = happiness;
         document.getElementById('coins').textContent = coins;
         document.getElementById('apples').textContent = apples;
-        document.getElementById('goldenApples').textContent = `goldenApples: ${goldenApples}`;
+        document.getElementById('goldenApples').textContent = goldenApples;
         document.getElementById('level').textContent = level;
 
         if (hunger < 10 || cleanliness < 10 || happiness < 10) {
@@ -735,7 +735,6 @@ document.getElementById('buyApples').addEventListener('click', () => {
 });
 
 // Game state variables
-let goldenApples = 0; // Adjust this if the player already has golden apples
 
 
 // Menu button and fuse system elements
@@ -861,3 +860,4 @@ background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%,
 -webkit-text-fill-color: transparent;" >V5 (prev version V5 beta)</p>
 </body>
 </html>
+
