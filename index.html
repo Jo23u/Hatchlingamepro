@@ -146,6 +146,130 @@
     color: green;
 }
 
+@keyframes rainbowGlow {
+    0% { box-shadow: 0 0 10px red; }
+    17% { box-shadow: 0 0 10px orange; }
+    34% { box-shadow: 0 0 10px yellow; }
+    51% { box-shadow: 0 0 10px green; }
+    68% { box-shadow: 0 0 10px blue; }
+    85% { box-shadow: 0 0 10px indigo; }
+    100% { box-shadow: 0 0 10px violet; }
+}
+
+#buyApples {
+    animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    background-size: 300%; /* Make the gradient larger for smoother transitions */
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#buyApples:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#feed:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#open-chest:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#shower:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#toggle-menu:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#save-progress:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#reset-data:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#show-phone:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#show-background:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#reset-background:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#toggleShopMenu:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#NTC:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+#fusings:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+/* Menu styling */
+#fuseMenu {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border: 2px solid #ccc;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#fusings, #fuseButton {
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#fusings:hover, #fuseButton:hover {
+    background-color: #45a049;
+}
+
+@keyframes rainbowGlow {
+    0% { box-shadow: 0 0 10px red; }
+    17% { box-shadow: 0 0 10px orange; }
+    34% { box-shadow: 0 0 10px yellow; }
+    51% { box-shadow: 0 0 10px green; }
+    68% { box-shadow: 0 0 10px blue; }
+    85% { box-shadow: 0 0 10px indigo; }
+    100% { box-shadow: 0 0 10px violet; }
+}
+
+#fusings {
+    animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    background-size: 300%; /* Make the gradient larger for smoother transitions */
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
     </style>
 </head>
 <body>
@@ -162,6 +286,7 @@
             <div class="stat">Happiness: <span id="happiness">100</span></div>
             <div class="stat">Coins: <span id="coins">0</span></div>
             <div class="stat">Apples: <span id="apples">0</span></div>
+            <p>Golden Apples: <span id="goldenApples">0</span></p>
             <div class="stat">Level: <span id="level">1</span></div>
         </div>
         <button id="feed">Feed Apple</button>
@@ -175,6 +300,7 @@
         <button id="reset-background">Reset Background</button>
         <button id="toggleShopMenu">Shop</button>
         <button id="NTC">Notice</button>
+        <button id="fusings">Fuse!</button>
 
     </div>
 
@@ -200,6 +326,7 @@
         <a href="./CHRlink.html">
             <button>Characters</button>
         </a>
+        <button id="toggle-autosave">Enable Auto Save</button>
         <br>
         <a href="https://jo23u.github.io/hatchlingnew/">Classic version</a>
         <a href="https://jo23u.github.io/hatchlingnew/hatchlingame+.html">Plus version</a>
@@ -223,6 +350,7 @@
         <button id="buyBoostPotion">Buy Boost Potion (30 Coins)</button>
         <!-- Inside your Shop Menu -->
 <button id="infinite-states-button">Enable Infinite States (900,000 coins)</button>
+<button id="buyApples">Buy 1000 Apples (500 Coins Limited offer!!!)</button>
 
         <p id="shopFeedback"></p>
     </div>
@@ -233,7 +361,21 @@
         <p>Please make sure you save your data after buying or purchasing anything, after you save your data your data is safely stored in localstorage
             and even is there is an update it will still remain as it is.
         </p>
+        <br>
+        <p>V5 update-
+            Please notice that if you want to feed the hatchling golden apples go to the fuse menu and you will find it, also if you have auto save activated in the main 
+            menu it will automatically trigger it off after reloading the page or leaving it.
+        </p>
     </div>
+
+    <!-- Fuse System Menu -->
+<div id="fuseMenu" style="display: none;">
+    <h2>Fuse System</h2>
+    <p>Fuse 10 normal apples to create 1 golden apple.</p>
+    <button id="close-men2" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <button id="fuseButton">Fuse Apples</button>
+    <button id="feedGoldenAppleButton">Feed Golden Apple</button>
+</div>
 
     <script>
     let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1;
@@ -283,6 +425,7 @@ document.body.appendChild(scriptTag);
         document.getElementById('happiness').textContent = happiness;
         document.getElementById('coins').textContent = coins;
         document.getElementById('apples').textContent = apples;
+        document.getElementById('goldenApples').textContent = `: ${goldenApples}`;
         document.getElementById('level').textContent = level;
 
         if (hunger < 10 || cleanliness < 10 || happiness < 10) {
@@ -338,14 +481,14 @@ document.body.appendChild(scriptTag);
     });
 
     document.getElementById('save-progress').addEventListener('click', () => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level }));
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level, goldenApples, }));
         alert('Progress saved!');
     });
 
     window.onload = () => {
         const savedData = JSON.parse(localStorage.getItem('characterGame'));
         if (savedData) {
-            ({ hunger, cleanliness, happiness, coins, apples, level } = savedData);
+            ({ hunger, cleanliness, happiness, coins, apples, level, goldenApples, } = savedData);
             updateStats();
         }
         const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
@@ -382,6 +525,7 @@ document.body.appendChild(scriptTag);
             happiness = 100;
             coins = 0;
             apples = 0;
+            goldenApples = 0
             level = 1;
             leaderboard = [];
             localStorage.removeItem('characterGame');
@@ -576,12 +720,144 @@ toggleMenuButton.addEventListener('click', () => {
     }
 });
 
+// Handle "Buy 1000 Apples (500 Coins)" Button
+document.getElementById('buyApples').addEventListener('click', () => {
+    if (coins >= 500) {
+        coins -= 500; // Deduct 500 coins
+        apples += 1000; // Add 1000 apples
+        updateStats(); // Update the stats on the screen
+        document.getElementById('shopFeedback').textContent = 'You successfully bought 1000 apples!';
+        document.getElementById('shopFeedback').style.color = 'green';
+    } else {
+        document.getElementById('shopFeedback').textContent = 'Not enough coins to buy 1000 apples.';
+        document.getElementById('shopFeedback').style.color = 'red';
+    }
+});
+
+// Game state variables
+let goldenApples = 0; // Adjust this if the player already has golden apples
+
+
+// Menu button and fuse system elements
+const menuButton = document.getElementById('fusings');
+const fuseMenu = document.getElementById('fuseMenu');
+const fuseButton = document.getElementById('fuseButton');
+
+// Toggle the fuse menu visibility
+menuButton.addEventListener('click', () => {
+    if (fuseMenu.style.display === 'none' || fuseMenu.style.display === '') {
+        fuseMenu.style.display = 'block'; // Show the menu
+    } else {
+        fuseMenu.style.display = 'none'; // Hide the menu
+    }
+});
+
+// Fuse 10 normal apples into 1 golden apple
+fuseButton.addEventListener('click', () => {
+    if (apples >= 10) {
+        apples -= 10;
+        goldenApples += 1;
+        alert('You fused 10 normal apples into 1 golden apple!');
+    } else {
+        alert('Not enough normal apples to fuse!');
+    }
+    updateUI(); // Refresh UI elements
+});
+
+// Consume a golden apple and restore hunger to 100%
+function consumeGoldenApple() {
+    if (goldenApples > 0) {
+        goldenApples -= 1;
+        hunger = 100;
+        alert('You ate a golden apple! Hunger restored to 100%.');
+    } else {
+        alert('No golden apples to consume!');
+    }
+    updateUI(); // Refresh UI elements
+}
+
+// Update UI elements to reflect current state
+function updateUI() {
+    document.getElementById('apples').textContent = apples;
+    document.getElementById('goldenApples').textContent = goldenApples;
+    document.getElementById('hunger').textContent = hunger + '%';
+}
+
+// Initialize the UI with the default values
+updateUI();
+
+// Feed a golden apple and restore hunger
+const feedGoldenAppleButton = document.getElementById('feedGoldenAppleButton');
+
+feedGoldenAppleButton.addEventListener('click', () => {
+    if (goldenApples > 0) {
+        goldenApples -= 1;
+        hunger = 100; // Restore hunger to 100%
+        alert('You ate a golden apple! Hunger is now at 100%.');
+    } else {
+        alert('No golden apples to feed!');
+    }
+    updateUI(); // Refresh UI elements
+});
+
+document.getElementById('close-men2').addEventListener('click', () => {
+    document.getElementById('fuseMenu').style.display = 'none';
+});
+
+let autoSaveEnabled = false; // Auto-save is disabled by default
+
+// Toggle auto-save on/off
+document.getElementById('toggle-autosave').addEventListener('click', () => {
+    autoSaveEnabled = !autoSaveEnabled;
+    const button = document.getElementById('toggle-autosave');
+    if (autoSaveEnabled) {
+        button.textContent = 'Disable Auto Save';
+        startAutoSave();
+    } else {
+        button.textContent = 'Enable Auto Save';
+        stopAutoSave();
+    }
+});
+
+// Function to start auto-save
+function startAutoSave() {
+    autoSaveInterval = setInterval(() => {
+        saveProgress();
+    }, 5000); // Save every 5 seconds (or change to any interval you prefer)
+}
+
+// Function to stop auto-save
+function stopAutoSave() {
+    clearInterval(autoSaveInterval);
+}
+
+// Save progress function
+function saveProgress() {
+    localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level, goldenApples }));
+    console.log('Auto-save: Progress saved!');
+}
+
+// Load progress from local storage on page load
+window.onload = () => {
+    const savedData = JSON.parse(localStorage.getItem('characterGame'));
+    if (savedData) {
+        ({ hunger, cleanliness, happiness, coins, apples, level, goldenApples } = savedData);
+        updateStats();
+    }
+
+    const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
+    if (savedLeaderboard) {
+        leaderboard = savedLeaderboard;
+        updateLeaderboard();
+    }
+};
+
+
 
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V5 beta (prev version V4)</p>
+-webkit-text-fill-color: transparent;" >V5 (prev version V5 beta)</p>
 </body>
 </html>
-
