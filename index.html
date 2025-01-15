@@ -480,23 +480,20 @@ document.body.appendChild(scriptTag);
         }
     });
 
-    document.getElementById('save-progress').addEventListener('click', () => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level, goldenApples, }));
-        alert('Progress saved!');
-    });
-
     window.onload = () => {
-        const savedData = JSON.parse(localStorage.getItem('characterGame'));
-        if (savedData) {
-            ({ hunger, cleanliness, happiness, coins, apples, level, goldenApples, } = savedData);
-            updateStats();
-        }
-        const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
-        if (savedLeaderboard) {
-            leaderboard = savedLeaderboard;
-            updateLeaderboard();
-        }
+    const savedData = JSON.parse(localStorage.getItem('characterGame'));
+    if (savedData) {
+        ({ hunger, cleanliness, happiness, coins, apples, level, goldenApples } = savedData);
+        updateStats();
     }
+
+    const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
+    if (savedLeaderboard) {
+        leaderboard = savedLeaderboard;
+        updateLeaderboard();
+    }
+};
+
 
         
 
@@ -816,23 +813,6 @@ function saveProgress() {
     console.log('Auto-save: Progress saved!');
 }
 
-// Load progress from local storage on page load
-window.onload = () => {
-    const savedData = JSON.parse(localStorage.getItem('characterGame'));
-    if (savedData) {
-        ({ hunger, cleanliness, happiness, coins, apples, level, goldenApples } = savedData);
-        updateStats();
-    }
-
-    const savedLeaderboard = JSON.parse(localStorage.getItem('leaderboard'));
-    if (savedLeaderboard) {
-        leaderboard = savedLeaderboard;
-        updateLeaderboard();
-    }
-};
-
-
-
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
@@ -840,3 +820,4 @@ background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%,
 -webkit-text-fill-color: transparent;" >V5 (prev version V5 beta)</p>
 </body>
 </html>
+
