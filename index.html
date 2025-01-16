@@ -56,6 +56,8 @@
 
         button:hover {
             background-color: #45a049;
+            transition: transform 0.2s;
+            transform: scale(1.1); /* Slightly enlarge the button on hover */
         }
 
         .menu {
@@ -103,7 +105,7 @@
     z-index: 101;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 570px) {
             body {
                 padding: 10px;
                 background-color: lightblue;
@@ -158,7 +160,7 @@
 
 #buyApples {
     animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
-    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    background: linear-gradient(90deg, red, rgb(255, 0, 0), rgb(255, 0, 0), rgb(255, 4, 4), rgb(241, 0, 0), indigo, violet);
     background-size: 300%; /* Make the gradient larger for smoother transitions */
     border: none;
     color: white;
@@ -171,51 +173,114 @@
 
 #buyApples:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #feed:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #open-chest:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #shower:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #toggle-menu:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #save-progress:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #reset-data:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #show-phone:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #show-background:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #reset-background:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #toggleShopMenu:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
 
 #NTC:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
 }
+
+#fuse-menu-button {
+    animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
+    background: linear-gradient(90deg, rgb(21, 1, 238), rgb(128, 0, 255), rgb(255, 242, 0), rgb(255, 4, 4), rgb(241, 0, 0), indigo, violet);
+    background-size: 300%; /* Make the gradient larger for smoother transitions */
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#fuse-menu-button:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#status-indicator {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Make width and height equal for a perfect circle */
+    border-radius: 50%; /* Makes it a circle */
+    background-color: yellow; /* Circle color */
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure it's above other elements */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional shadow for better visibility */
+}
+
+#daily-login-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 2px solid #ccc;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+#daily-login-menu button {
+    margin: 5px;
+}
+
+
     </style>
 </head>
 <body>
@@ -232,6 +297,7 @@
             <div class="stat">Happiness: <span id="happiness">100</span></div>
             <div class="stat">Coins: <span id="coins">0</span></div>
             <div class="stat">Apples: <span id="apples">0</span></div>
+            <div id="golden-apples">Golden Apples: 0</div>
             <div class="stat">Level: <span id="level">1</span></div>
         </div>
         <button id="feed">Feed Apple</button>
@@ -244,6 +310,7 @@
         <button id="show-background">Show Background</button>
         <button id="reset-background">Reset Background</button>
         <button id="toggleShopMenu">Shop</button>
+        <button id="fuse-menu-button">Fuse Apples</button>
         <button id="NTC">Notice</button>
 
     </div>
@@ -271,6 +338,7 @@
             <button>Characters</button>
         </a>
         <button id="toggle-autosave">Enable Auto Save</button>
+        <button id="daily-login-button">Daily Login</button>
         <br>
         <a href="https://jo23u.github.io/hatchlingnew/">Classic version</a>
         <a href="https://jo23u.github.io/hatchlingnew/hatchlingame+.html">Plus version</a>
@@ -294,7 +362,7 @@
         <button id="buyBoostPotion">Buy Boost Potion (30 Coins)</button>
         <!-- Inside your Shop Menu -->
 <button id="infinite-states-button">Enable Infinite States (900,000 coins)</button>
-<button id="buyApples">Buy 1000 Apples (500 Coins Limited offer!!!)</button>
+<button id="buyApples">Offer unavailable! come back for more offers.</button>
 
         <p id="shopFeedback"></p>
     </div>
@@ -304,11 +372,29 @@
         <h2>Notice</h2>
         <p>Please make sure you save your data after buying or purchasing anything, after you save your data your data is safely stored in localstorage
             and even is there is an update it will still remain as it is.
+            V6 beta - Please make sure you dont reload the page if you have auto save on, it might turn off automatically after reloading or closing the game!
         </p>
     </div>
 
+    <div id="fuse-menu" style="display: none;">
+        <p>Fuse 10 Apples into 1 Golden Apple for 30 Coins?</p>
+        <button id="fuse-apples-button">Fuse Now</button>
+        <button id="close-fuse-menu">Cancel</button>
+        <button id="use-golden-apple">Feed Golden Apple</button>
+    </div>
+
+    <div id="status-indicator" style="display: none;">Loading...</div>
+
+    <div id="daily-login-menu" style="display: none;">
+        <h2>Daily Login Rewards</h2>
+        <p id="daily-login-info"></p>
+        <button id="claim-daily-reward">Claim Reward</button>
+        <button id="close-daily-menu">Close</button>
+    </div>
+
+
     <script>
-    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1;
+    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0;
     let playerName = '', leaderboard = [];
     let infiniteStates = false; // Initially set to false
     let stateDecrementInterval;
@@ -357,6 +443,7 @@ document.body.appendChild(scriptTag);
         document.getElementById('coins').textContent = coins;
         document.getElementById('apples').textContent = apples;
         document.getElementById('level').textContent = level;
+        document.getElementById('golden-apples').innerText = `Golden Apples: ${goldenApples}`; // Update golden apples
 
         if (hunger < 10 || cleanliness < 10 || happiness < 10) {
             document.getElementById('character').style.backgroundImage = "url('Picsart_25-01-10_00-23-56-807.png')";
@@ -411,16 +498,23 @@ document.body.appendChild(scriptTag);
     });
 
     document.getElementById('save-progress').addEventListener('click', () => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, level }));
+    showStatus('');
+    setTimeout(() => {
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level }));
         alert('Progress saved!');
-    });
+        hideStatus();
+    }, 2000); // Optional delay for better UX
+});
 
-    function autoSave() {
-    if (autoSaveEnabled) {
-        saveProgress();  // Calls your manual save function to save data
-        console.log('Auto-saved!');
-    }
+function autoSave() {
+    showStatus('');
+    setTimeout(() => {
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level }));
+        console.log('Game auto-saved!'); // Replace with alert or other feedback if needed
+        hideStatus();
+    }, 2000); // Optional delay for better UX
 }
+
 
 // Function to start auto-saving at regular intervals
 function startAutoSave() {
@@ -436,6 +530,7 @@ function saveProgress() {
         happiness,
         coins,
         apples,
+        goldenApples, // Add golden apples
         level
     };
     localStorage.setItem('characterGame', JSON.stringify(progress));
@@ -456,6 +551,7 @@ window.onload = () => {
         happiness = savedData.happiness;
         coins = savedData.coins;
         apples = savedData.apples;
+        goldenApples = savedData.goldenApples || 0; // Default to 0 if undefined
         level = savedData.level;
         updateStats();
     }
@@ -686,24 +782,162 @@ toggleMenuButton.addEventListener('click', () => {
 
 // Handle "Buy 1000 Apples (500 Coins)" Button
 document.getElementById('buyApples').addEventListener('click', () => {
-    if (coins >= 500) {
-        coins -= 500; // Deduct 500 coins
-        apples += 1000; // Add 1000 apples
+    if (coins >= 0) {
+        coins -= 0; // Deduct 500 coins
+        apples += 0; // Add 1000 apples
         updateStats(); // Update the stats on the screen
-        document.getElementById('shopFeedback').textContent = 'You successfully bought 1000 apples!';
+        document.getElementById('shopFeedback').textContent = 'Sorry but this offer is unavailable!';
         document.getElementById('shopFeedback').style.color = 'green';
     } else {
-        document.getElementById('shopFeedback').textContent = 'Not enough coins to buy 1000 apples.';
+        document.getElementById('shopFeedback').textContent = 'Sorry but this offer is unavailable!';
         document.getElementById('shopFeedback').style.color = 'red';
     }
 });
+
+document.getElementById('fuse-menu-button').addEventListener('click', () => {
+    document.getElementById('fuse-menu').style.display = 'block';
+});
+
+document.getElementById('close-fuse-menu').addEventListener('click', () => {
+    document.getElementById('fuse-menu').style.display = 'none';
+});
+
+document.getElementById('fuse-apples-button').addEventListener('click', () => {
+    if (apples >= 10 && coins >= 30) {
+        apples -= 10; // Deduct 10 apples
+        coins -= 30; // Deduct 30 coins
+        goldenApples += 1; // Add 1 golden apple
+        updateStats(); // Update the UI
+        alert('Successfully fused 10 apples into 1 golden apple!');
+    } else if (apples < 10) {
+        alert('You need at least 10 apples to fuse!');
+    } else if (coins < 30) {
+        alert('You need at least 30 coins to fuse!');
+    }
+    document.getElementById('fuse-menu').style.display = 'none'; // Close the menu
+});
+
+function useGoldenApple() {
+    if (goldenApples > 0) {
+        goldenApples -= 1;
+        hunger = 100; // Set hunger to 100%
+        updateStats();
+        alert('You used a golden apple! Hunger is now full!');
+    } else {
+        alert('No golden apples left!');
+    }
+}
+
+document.getElementById('use-golden-apple').addEventListener('click', useGoldenApple);
+
+// Function to show and hide the status indicator
+function showStatus(message) {
+    const indicator = document.getElementById('status-indicator');
+    indicator.textContent = message; // Set the message (e.g., "Saving..." or "Loading...")
+    indicator.style.display = 'block';
+}
+
+function hideStatus() {
+    const indicator = document.getElementById('status-indicator');
+    indicator.style.display = 'none';
+}
+
+// Rewards for each day
+const dailyRewards = [
+    "100 coins",
+    "5 apple",
+    "190 coins",
+    "10 apples",
+    "280 coins",
+    "1 golden apple",
+    "370 coins",
+    "20 apples",
+    "500 coins",
+    "2 golden apples",
+    "1000 coins",
+    "70 apples",
+];
+
+let lastLoginDate = localStorage.getItem('lastLoginDate');
+let currentStreak = parseInt(localStorage.getItem('currentStreak'), 10) || 0;
+
+function openDailyLoginMenu() {
+    const dailyMenu = document.getElementById('daily-login-menu');
+    const dailyInfo = document.getElementById('daily-login-info');
+
+    dailyMenu.style.display = 'block';
+
+    // Check if the player has already claimed today's reward
+    const today = new Date().toDateString();
+    if (lastLoginDate === today) {
+        dailyInfo.textContent = `You have already claimed today's reward: ${dailyRewards[currentStreak - 1]}`;
+    } else {
+        const reward = dailyRewards[currentStreak] || "No more rewards! Come back tomorrow.";
+        dailyInfo.textContent = `Today's reward: ${reward}`;
+    }
+}
+
+function closeDailyLoginMenu() {
+    const dailyMenu = document.getElementById('daily-login-menu');
+    dailyMenu.style.display = 'none';
+}
+
+function claimDailyReward() {
+    const today = new Date().toDateString();
+
+    // Check if the reward for today is already claimed
+    if (lastLoginDate === today) {
+        alert("You've already claimed today's reward!");
+        return;
+    }
+
+    // Update streak and save the new last login date
+    if (lastLoginDate && new Date(lastLoginDate).getDate() === new Date().getDate() - 1) {
+        currentStreak++;
+    } else {
+        currentStreak = 1; // Reset streak if the player missed a day
+    }
+
+    lastLoginDate = today;
+    localStorage.setItem('lastLoginDate', lastLoginDate);
+    localStorage.setItem('currentStreak', currentStreak);
+
+    // Grant reward
+    const reward = dailyRewards[currentStreak - 1];
+    if (reward) {
+        alert(`You claimed: ${reward}`);
+
+        // Handle specific rewards (e.g., coins, apples, golden apples)
+        if (reward.includes('coins')) {
+            coins += parseInt(reward.split(' ')[0], 10);
+        } else if (reward.includes('apple')) {
+            if (reward.includes('golden')) {
+                goldenApples++;
+            } else {
+                apples += parseInt(reward.split(' ')[0], 10);
+            }
+        }
+
+        updateStats(); // Update the stats display
+    } else {
+        alert("No more rewards left! Come back tomorrow.");
+    }
+
+    // Update the menu display
+    openDailyLoginMenu();
+}
+
+// Event Listeners
+document.getElementById('daily-login-button').addEventListener('click', openDailyLoginMenu);
+document.getElementById('close-daily-menu').addEventListener('click', closeDailyLoginMenu);
+document.getElementById('claim-daily-reward').addEventListener('click', claimDailyReward);
+
 
 
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V5 (prev version V5 beta)</p>
+-webkit-text-fill-color: transparent;" >V6 beta (prev version V5)</p>
 </body>
 </html>
-
