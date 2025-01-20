@@ -160,7 +160,7 @@
 
 #buyApples {
     animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
-    background: linear-gradient(90deg, red, rgb(255, 0, 0), rgb(255, 0, 0), rgb(255, 4, 4), rgb(241, 0, 0), indigo, violet);
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
     background-size: 300%; /* Make the gradient larger for smoother transitions */
     border: none;
     color: white;
@@ -170,7 +170,6 @@
     cursor: pointer;
     transition: transform 0.2s;
 }
-
 #buyApples:hover {
     transform: scale(1.1); /* Slightly enlarge the button on hover */
     transition: transform 0.2s;
@@ -280,7 +279,28 @@
     margin: 5px;
 }
 
+/* Classic Theme */
+.classic {
+    background-color: #f0f8ff;
+    border: 5px solid #000000;
+}
 
+/* Retro Theme */
+.retro {
+    background-color: #f0e68c;
+    border: 5px solid #8b4513;
+}
+
+/* Futuristic Theme */
+.futuristic {
+    background-color: #1c1c1c;
+    border: 5px solid #00ff00;
+}
+
+/* Add transition effects for smooth theme changes */
+.phone {
+    transition: background-color 0.3s ease, border 0.3s ease;
+}
     </style>
 </head>
 <body>
@@ -311,6 +331,8 @@
         <button id="reset-background">Reset Background</button>
         <button id="toggleShopMenu">Shop</button>
         <button id="fuse-menu-button">Fuse Apples</button>
+        <button id="afkButton">Enter AFK Zone</button>
+<button id="closeAfkButton" style="display: none;">Close AFK Zone</button>
         <button id="NTC">Notice</button>
 
     </div>
@@ -354,7 +376,14 @@
     <div class="phone" id="phone">
         <p>Click below to earn apples!</p>
         <button id="earn-apples">Earn Apples</button>
+        <button onclick="copyLink()">Share link</button>
         <button id="close-phone">Close Phone</button>
+        <select id="theme-selector" onchange="changePhoneTheme(this.value)">
+            <option value="classic">Classic</option>
+            <option value="retro">Retro</option>
+            <option value="futuristic">Futuristic</option>
+          </select>
+          
     </div>
 
     <div id="shopMenu" style="display: none;">
@@ -362,7 +391,8 @@
         <button id="buyBoostPotion">Buy Boost Potion (30 Coins)</button>
         <!-- Inside your Shop Menu -->
 <button id="infinite-states-button">Enable Infinite States (900,000 coins)</button>
-<button id="buyApples">Offer unavailable! come back for more offers.</button>
+<button id="buyApples">5000 APPLES! (1000 coins)</button>
+<button id="open-golden-chest">Open Golden Chest (400 coins)</button>
 
         <p id="shopFeedback"></p>
     </div>
@@ -399,6 +429,8 @@
     let infiniteStates = false; // Initially set to false
     let stateDecrementInterval;
     let autoSaveEnabled = false; // Auto-save is disabled by default
+    let isInAfkZone = false; // Flag to track if the user is in AFK zone
+let afkInterval; // Interval to reward coins while in AFK zone
 
 // Initialize YouTube Player API
 function onYouTubePlayerAPIReady() {
@@ -541,6 +573,7 @@ document.getElementById('toggle-autosave').addEventListener('click', () => {
     autoSaveEnabled = !autoSaveEnabled; // Toggle the state of auto-save
     alert(`Auto-save is now ${autoSaveEnabled ? 'enabled' : 'disabled'}`);
     startAutoSave(); // Start auto-saving if it's enabled
+    document.getElementById('toggle-autosave').textContent = (`Auto-save is now ${autoSaveEnabled ? 'enabled' : 'disabled'}`);
 });
 
 window.onload = () => {
@@ -782,14 +815,14 @@ toggleMenuButton.addEventListener('click', () => {
 
 // Handle "Buy 1000 Apples (500 Coins)" Button
 document.getElementById('buyApples').addEventListener('click', () => {
-    if (coins >= 0) {
-        coins -= 0; // Deduct 500 coins
-        apples += 0; // Add 1000 apples
+    if (coins >= 1000) {
+        coins -= 1000; // Deduct 500 coins
+        apples += 5000; // Add 1000 apples
         updateStats(); // Update the stats on the screen
-        document.getElementById('shopFeedback').textContent = 'Sorry but this offer is unavailable!';
+        document.getElementById('shopFeedback').textContent = 'Successfully bought 5000 apples!';
         document.getElementById('shopFeedback').style.color = 'green';
     } else {
-        document.getElementById('shopFeedback').textContent = 'Sorry but this offer is unavailable!';
+        document.getElementById('shopFeedback').textContent = 'Not enough coins to buy 5000 apples.';
         document.getElementById('shopFeedback').style.color = 'red';
     }
 });
@@ -896,6 +929,7 @@ function claimDailyReward() {
         currentStreak++;
     } else {
         currentStreak = 1; // Reset streak if the player missed a day
+        alert('Your streak broke because you missed a day!')
     }
 
     lastLoginDate = today;
@@ -932,12 +966,114 @@ document.getElementById('daily-login-button').addEventListener('click', openDail
 document.getElementById('close-daily-menu').addEventListener('click', closeDailyLoginMenu);
 document.getElementById('claim-daily-reward').addEventListener('click', claimDailyReward);
 
+// Add event listener for the golden chest button
+document.getElementById('open-golden-chest').addEventListener('click', () => {
+    if (coins >= 400) { // Check if the player has enough coins
+        coins -= 400; // Deduct 100 coins
+        const reward = Math.floor(Math.random() * 2) === 0 ? 
+            Math.floor(Math.random() * 501) + 500 : // Random coins between 50 and 100
+            Math.floor(Math.random() * 31) + 30; // Random apples between 5 and 10
+        
+        // Update the reward text in the existing 'shopFeedback' element
+        const rewardText = document.getElementById('shopFeedback');
+        rewardText.style.display = 'block';
+        
+        if (reward >= 50) { // If reward is coins
+            coins += reward;
+            rewardText.textContent = `You received ${reward} coins!`;
+        } else { // If reward is apples
+            apples += reward;
+            rewardText.textContent = `You received ${reward} apples!`;
+        }
+        
+        // Hide the reward text after 10 seconds
+        setTimeout(() => {
+            rewardText.style.display = 'none';
+        }, 10000);
+        
+        updateStats(); // Update stats
+    } else {
+        alert('Not enough coins! You need 400 coins to open the golden chest.');
+    }
+});
 
+function copyLink() {
+    const url = window.location.href;  // Gets the current URL of the webpage
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Link copied to clipboard!');  // Notify the user
+    }).catch(err => {
+      alert('Failed to copy the link!');
+    });
+  }
+
+  function changePhoneTheme(theme) {
+  const phone = document.getElementById('phone');
+  // Reset the class of the phone container before applying the new theme
+  phone.classList.remove('classic', 'retro', 'futuristic');
+  // Apply the selected theme
+  phone.classList.add(theme);
+}
+
+// Function to disable all page actions except the Close AFK Zone button
+function disablePage() {
+    // Disable all interactive elements (except the Close AFK Zone button)
+    let elements = document.querySelectorAll("button, a, input, select, textarea, div");
+    elements.forEach(element => {
+        if (element.id !== "closeAfkButton") {
+            element.setAttribute("disabled", "true");
+        }
+    });
+}
+
+// Function to enable all page actions again
+function enablePage() {
+    // Enable all interactive elements
+    let elements = document.querySelectorAll("button, a, input, select, textarea, div");
+    elements.forEach(element => {
+        if (element.id !== "closeAfkButton") {
+            element.removeAttribute("disabled");
+        }
+    });
+}
+
+// Handle entering the AFK zone
+document.getElementById('afkButton').addEventListener('click', function() {
+    if (!isInAfkZone) {
+        isInAfkZone = true;
+
+        // Disable all actions on the page except the Close AFK Zone button
+        disablePage();
+
+        // Show the Close AFK Zone button
+        document.getElementById('closeAfkButton').style.display = "block";
+
+        // Start giving coins every second (without the need for clicking)
+        afkInterval = setInterval(function() {
+            coins += 2; // Add 2 coins every second automatically
+            console.log("Coins: " + coins); // For testing, check the coin count in the console
+        }, 1000);
+    }
+});
+
+// Handle closing the AFK zone
+document.getElementById('closeAfkButton').addEventListener('click', function() {
+    if (isInAfkZone) {
+        // Stop the coin interval
+        clearInterval(afkInterval);
+
+        // Enable page actions again
+        enablePage();
+
+        // Hide the Close AFK Zone button and reset the state
+        document.getElementById('closeAfkButton').style.display = "none";
+        isInAfkZone = false;
+    }
+});
 
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V6 beta (prev version V5)</p>
+-webkit-text-fill-color: transparent;" >V6 (prev version V6 beta)</p>
 </body>
 </html>
