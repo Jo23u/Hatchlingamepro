@@ -1776,6 +1776,34 @@ document.getElementById('save-name').addEventListener('click', async () => {
     }
 });
 
+async function fetchActiveUsers() {
+    try {
+        const response = await fetch('http://localhost:3000/active-users');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const activeUsers = await response.json();
+        console.log('Active Users:', activeUsers); // Debugging log
+        updateLeaderboard(activeUsers);
+    } catch (error) {
+        console.error('Error fetching active users:', error);
+    }
+}
+
+function updateLeaderboard(activeUsers) {
+    const leaderboardEntries = document.getElementById('leaderboard-entries');
+    leaderboardEntries.innerHTML = '';
+    console.log('Updating Leaderboard with:', activeUsers); // Debugging log
+    if (Array.isArray(activeUsers)) {
+        activeUsers.forEach(user => {
+            const entry = document.createElement('div');
+            entry.textContent = user;
+            leaderboardEntries.appendChild(entry);
+        });
+    } else {
+        leaderboardEntries.innerHTML = '<div>No active users.</div>';
+    }
+}
 
 
 
@@ -1789,3 +1817,4 @@ background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%,
 -webkit-text-fill-color: transparent;" >V7 (prev version V7 beta)</p>
 </body>
 </html>
+
