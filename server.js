@@ -6,6 +6,8 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
+let active
+
 // In-memory storage for active users
 let activeUsers = [];
 
