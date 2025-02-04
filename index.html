@@ -328,24 +328,7 @@
         transition: transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
     }
 
-    #progress-container {
-  position: fixed;
-  left: 10px;
-  top: 50%;
-  width: 20px;
-  height: 300px;
-  background-color: #e0e0e0;
-  border: 2px solid #000;
-  border-radius: 10px;
-  overflow: hidden;
-}
 
-#progress-bar {
-  width: 100%;
-  height: 0;
-  background-color: #4caf50;
-  transition: height 0.3s ease;
-}
 
 #lucky-box {
   position: fixed;
@@ -372,6 +355,66 @@
   transform: scale(1.1);
 }
 
+body.dark-mode {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+button.dark-mode {
+    background-color: var(--button-background-dark);
+    color: var(--text-color-dark);
+}
+
+:root {
+    --background-color-light: #f0f8ff;
+    --background-color-dark: #1c1c1c;
+    --text-color-light: #000;
+    --text-color-dark: #fff;
+    --button-background-light: #4caf50;
+    --button-background-dark: #555;
+    --menu-background-light: #464242;
+    --menu-background-dark: #333;
+}
+.menu, .background-menu {
+    transition: background-color 0.3s, color 0.3s;
+    color: var(--text-color-light);
+}
+
+#inventory {
+    display: flex;
+    flex-wrap: wrap;
+    width: 180px;
+    margin: 10px;
+    background: #f0f8ff;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+
+
+
+.slot {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ddd;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
+
+.slot img {
+    width: 40px;
+    height: 40px;
+}
+
 
     </style>
 </head>
@@ -391,7 +434,7 @@
             <div class="stat">Apples: <span id="apples">0</span></div>
             <div id="golden-apples">Golden Apples: 0</div>
             <span id="luckPotionDisplay">Luck Potions: 0</span>
-            <div class="stat">Apples eaten: <span id="level">1</span></div>
+            <div class="stat">Level: <span id="level">1</span></div>
         </div>
         <button id="feed">Feed Apple</button>
         <button id="open-chest">Open Chest (-10 Coins)</button>
@@ -406,6 +449,10 @@
         <button id="fuse-menu-button">Fuse Apples</button>
         <button id="afkButton">Enter AFK Zone</button>
 <button id="closeAfkButton" style="display: none;">Close AFK Zone</button>
+<button id="toggle-deposit-menu">Deposit/Withdraw Menu
+    <button id="play-scooter-game">Play Scooter Game</button>
+    <button id="toggle-inventory">Toggle Inventory</button>
+    <button id="toggle-dark-mode">Toggle Dark Mode</button>
         <button id="NTC">Notice</button>
 
     </div>
@@ -422,13 +469,18 @@
     <div class="menu" id="menu">
         <button id="close-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
         <p>Hello dear player, this is the main menu!</p>
-        <input type="text" id="player-name" placeholder="Enter your name">
-        <button id="save-name">Save Name</button>
-        <div id="leaderboard">
-            <h3>Leaderboard</h3>
-            <div id="leaderboard-entries"></div>
-            <p>Please notice leaderboard is broken! it will be fixed soon</p>
-        </div>
+       <!-- Leaderboard Section -->
+<div id="leaderboard">
+    <h3>Leaderboard</h3>
+    <p style="color: red;" >Please do not type your name more than 2 times!</p>
+    <div id="leaderboard-entries"></div>
+</div>
+
+<!-- Input for Player Name -->
+<input type="text" id="player-name" placeholder="Enter your name">
+<button id="save-name">Save Name</button>
+<br>
+
         <a href="./CHRlink.html">
             <button>Characters</button>
         </a>
@@ -477,7 +529,9 @@
             and even is there is an update it will still remain as it is.
             V6 beta - Please make sure you dont reload the page if you have auto save on, it might turn off automatically after reloading or closing the game!
             <br>
-            V7 beta - please make sure you use your luck potions because there is no way to get it back if the page is reloaded or lost! and if you wonder why the level changed from level to apples eaten this is because there is now a progress bar.
+            V7 beta - please make sure you use your luck potions because there is no way to get it back if the page is reloaded or lost!
+            <br>
+            V7 - Progress bar is now removed.
         </p>
     </div>
 
@@ -505,9 +559,6 @@
     <button id="show-menu1" style="float: right; font-size: 16px; background: rgb(0, 255, 8); color: white; border: none; border-radius: 5px; cursor: pointer;">✔</button>
     <button id="buyLuckPotion">Buy Luck Potion (100 Coins)</button>
 
-    <div id="progress-container">
-        <div id="progress-bar"></div>
-      </div>
 
       <div id="lucky-box">
         🎁 Click for a Reward!
@@ -515,9 +566,33 @@
       
     
 
+<div class="menu" id="deposit-menu" style="display: none;">
+    <button id="close-deposit-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <p>Manage your coins:</p>
+    <button id="deposit-coins">Deposit Coins</button>
+    <button id="withdraw-coins">Withdraw Coins</button>
+    <div class="stat">Deposited Coins: <span id="deposited-coins">0</span>
+    </div>
+    </div>
+
+    <div class="menu" id="scooter-game-menu" style="display: none;">
+        <button id="close-scooter-game" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+        <canvas id="scooter-game-canvas" width="800" height="400"></canvas>
+        <p>Press space to jump over obstacles. Each jump gives 5 coins!</p>
+        </div>
+
+        <div id="inventory" class="inventory" style="display: none;">
+            <div class="slot" id="slot-1"></div>
+            <div class="slot" id="slot-2"></div>
+            <div class="slot" id="slot-3"></div>
+            <div class="slot" id="slot-4"></div>
+            <div class="slot" id="slot-5"></div>
+            <div class="slot" id="slot-6"></div>
+            </div>
+
 
     <script>
-    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0;
+    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0,depositedCoins = 0;
     let playerName = '', leaderboard = [];
     let infiniteStates = false; // Initially set to false
     let stateDecrementInterval;
@@ -527,8 +602,6 @@ let afkInterval; // Interval to reward coins while in AFK zone
 let dailySpinAvailable = true; // Track if the first spin is free today
     let luckPotions = 0; // Track luck potions available
     let isSpinning = false; // Prevent multiple spins at the same time
-    let feedCount = parseInt(localStorage.getItem("feedCount")) || 0;
-let progressCompleted = localStorage.getItem("progressCompleted") === "true";
 let lastLuckyBoxClaim = localStorage.getItem("lastLuckyBoxClaim") || null;
 
 // Initialize YouTube Player API
@@ -575,6 +648,8 @@ document.body.appendChild(scriptTag);
         document.getElementById('apples').textContent = apples;
         document.getElementById('level').textContent = level;
         document.getElementById('golden-apples').innerText = `Golden Apples: ${goldenApples}`; // Update golden apples
+    document.getElementById('deposited-coins').textContent = depositedCoins; 
+    updateInventory(); // Update inventory slots
 
         if (hunger < 10 || cleanliness < 10 || happiness < 10) {
             document.getElementById('character').style.backgroundImage = "url('Picsart_25-01-10_00-23-56-807.png')";
@@ -631,7 +706,7 @@ document.body.appendChild(scriptTag);
     document.getElementById('save-progress').addEventListener('click', () => {
     showStatus('');
     setTimeout(() => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level }));
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins }));
         alert('Progress saved!');
         hideStatus();
     }, 2000); // Optional delay for better UX
@@ -640,10 +715,9 @@ document.body.appendChild(scriptTag);
 function autoSave() {
     showStatus('');
     setTimeout(() => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level }));
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins }));
         console.log('Game auto-saved!'); // Replace with alert or other feedback if needed
         hideStatus();
-        updateProgressBar();
     }, 2000); // Optional delay for better UX
 }
 
@@ -663,7 +737,8 @@ function saveProgress() {
         coins,
         apples,
         goldenApples, // Add golden apples
-        level
+        level,
+        depositedCoins
     };
     localStorage.setItem('characterGame', JSON.stringify(progress));
 }
@@ -686,8 +761,10 @@ window.onload = () => {
         apples = savedData.apples;
         goldenApples = savedData.goldenApples || 0; // Default to 0 if undefined
         level = savedData.level;
+        depositedCoins = savedData.depositedCoins ||0;
         updateStats();
-        updateProgressBar();
+        fetchActiveUsers();
+        
     }
 };
 
@@ -1237,7 +1314,7 @@ const rewards = [
 
             // Handle reward
             if (reward.value === "spinAgain") {
-                alert("You won: Spin Again!");
+                alert("You won: nothing");
             } else {
                 coins += reward.value;
                 alert(`You won: ${reward.name}`);
@@ -1289,30 +1366,6 @@ document.getElementById('show-menu1').addEventListener('click', () => {
     document.getElementById('wheel').style.display = 'flex';
 });
 
-// Function to update the progress bar
-function updateProgressBar() {
-  const progressBar = document.getElementById("progress-bar");
-  const progressHeight = (feedCount / 15) * 100; // Calculate percentage
-  progressBar.style.height = progressHeight + "%";
-
-  if (feedCount >= 15 && !progressCompleted) {
-    // Reward user if the progress bar is completed
-    coins += 100;
-    localStorage.setItem("coins", coins);
-    alert("Congratulations! You earned 100 coins!");
-    progressCompleted = true;
-    localStorage.setItem("progressCompleted", "true");
-  }
-}
-
-// Update the progress bar when the hatchling is fed
-function feedHatchling() {
-  if (!progressCompleted) {
-    feedCount++;
-    localStorage.setItem("feedCount", feedCount);
-    updateProgressBar();
-  }
-}
 
 // Function to check if the lucky box should appear
 function checkLuckyBox() {
@@ -1367,10 +1420,461 @@ document.getElementById("lucky-box").addEventListener("click", claimLuckyBox);
 
 // Check lucky box status on page load
 checkLuckyBox();
+
+
+// Event listener for toggle deposit menu button
+document.getElementById('toggle-deposit-menu').addEventListener('click', () => {
+    const depositMenu = document.getElementById('deposit-menu');
+    depositMenu.style.display = depositMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+// Event listener for close deposit menu button
+document.getElementById('close-deposit-menu').addEventListener('click', () => {
+    document.getElementById('deposit-menu').style.display = 'none';
+});
+
+// Event listener for deposit button
+document.getElementById('deposit-coins').addEventListener('click', () => {
+    if (coins > 0) {
+        const depositAmount = prompt('How many coins would you like to deposit?', '0');
+        const amount = parseInt(depositAmount);
+
+        if (amount > 0 && amount <= coins) {
+            coins -= amount;
+            depositedCoins += amount;
+            updateStats();
+        } else {
+            alert('Invalid amount. Make sure you have enough coins to deposit.');
+        }
+    } else {
+        alert('You have no coins to deposit!');
+    }
+});
+
+// Event listener for withdraw button
+document.getElementById('withdraw-coins').addEventListener('click', () => {
+    if (depositedCoins > 0) {
+        const withdrawAmount = prompt('How many coins would you like to withdraw?', '0');
+        const amount = parseInt(withdrawAmount);
+
+        if (amount > 0 && amount <= depositedCoins) {
+            coins += amount;
+            depositedCoins -= amount;
+            updateStats();
+        } else {
+            alert('Invalid amount. Make sure you have enough coins to withdraw.');
+        }
+    } else {
+        alert('You have no coins to withdraw!');
+    }
+});
+
+document.getElementById('play-scooter-game').addEventListener('click', () => {
+    document.getElementById('scooter-game-menu').style.display = 'block';
+    startScooterGame();
+});
+
+document.getElementById('close-scooter-game').addEventListener('click', () => {
+    document.getElementById('scooter-game-menu').style.display = 'none';
+    stopScooterGame();
+});
+
+document.getElementById('play-scooter-game').addEventListener('click', () => {
+    if (canPlayScooterGame()) {
+        document.getElementById('scooter-game-menu').style.display = 'block';
+        startScooterGame();
+    } else {
+        alert('You need to wait for the cooldown period to finish before playing again!');
+    }
+});
+
+document.getElementById('close-scooter-game').addEventListener('click', () => {
+    stopScooterGame();
+    document.getElementById('scooter-game-menu').style.display = 'none';
+});
+
+let scooterGame, scooterPlayer, scooterObstacles, scooterInterval;
+
+document.getElementById('play-scooter-game').addEventListener('click', () => {
+    document.getElementById('scooter-game-menu').style.display = 'block';
+    startScooterGame();
+});
+
+document.getElementById('close-scooter-game').addEventListener('click', () => {
+    document.getElementById('scooter-game-menu').style.display = 'none';
+    stopScooterGame();
+});
+
+
+function startScooterGame() {
+    gameRunning = true;
+    const canvas = document.getElementById('scooter-game-canvas');
+    const ctx = canvas.getContext('2d');
+    scooterGame = { canvas, ctx, width: 800, height: 400, speed: 5, playing: true };
+    scooterPlayer = { x: 50, y: 300, width: 50, height: 50, vy: 0, jumping: false };
+    scooterObstacles = [];
+    scooterInterval = setInterval(updateScooterGame, 20);
+
+    document.addEventListener('keydown', handleJump);
+    canvas.addEventListener('click', handleJump); // For mouse clicks
+    canvas.addEventListener('touchstart', handleJump); // For touch events
+}
+
+
+function stopScooterGame() {
+    gameRunning = false;
+    clearInterval(scooterInterval);
+    document.removeEventListener('keydown', handleJump);
+    const canvas = document.getElementById('scooter-game-canvas');
+    canvas.removeEventListener('click', handleJump); // Remove mouse click listener
+    canvas.removeEventListener('touchstart', handleJump); // Remove touch event listener
+    scooterGame.playing = false;
+    document.getElementById('scooter-game-menu').style.display = 'none';
+}
+
+
+function handleJump(e) {
+    if ((e.type === 'keydown' && e.code !== 'Space') || (e.type === 'touchstart' && !gameRunning)) return;
+    if (!scooterPlayer.jumping && gameRunning) {
+        scooterPlayer.vy = -15;
+        scooterPlayer.jumping = true;
+        coins += 5; // Give 50 coins for each jump
+        updateStats();
+    }
+}
+
+
+function updateScooterGame() {
+    const { canvas, ctx, width, height, speed } = scooterGame;
+    ctx.clearRect(0, 0, width, height);
+
+    // Update player
+    scooterPlayer.y += scooterPlayer.vy;
+    scooterPlayer.vy += 1;
+    if (scooterPlayer.y >= 300) {
+        scooterPlayer.y = 300;
+        scooterPlayer.jumping = false;
+    }
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(scooterPlayer.x, scooterPlayer.y, scooterPlayer.width, scooterPlayer.height);
+
+    // Update obstacles
+    if (Math.random() < 0.02) {
+        scooterObstacles.push({ x: width, y: 300, width: 50, height: 50 });
+    }
+    ctx.fillStyle = 'red';
+    for (let i = 0; i < scooterObstacles.length; i++) {
+        const obs = scooterObstacles[i];
+        obs.x -= speed;
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        if (obs.x < 0) scooterObstacles.splice(i, 1);
+        if (obs.x < scooterPlayer.x + scooterPlayer.width && obs.x + obs.width > scooterPlayer.x && obs.y < scooterPlayer.y + scooterPlayer.height && obs.y + obs.height > scooterPlayer.y) {
+            stopScooterGame();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+document.getElementById('toggle-dark-mode').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const elements = document.querySelectorAll('button, .menu, .background-menu');
+    elements.forEach(element => {
+        element.classList.toggle('dark-mode');
+    });
+});
+
+function updateInventory() {
+    // Clear current inventory slots
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        slot.innerHTML = ''; // Clear slot
+        slot.removeEventListener('click', handleAppleClick); // Remove any existing click listeners
+        slot.removeEventListener('click', handleGoldenAppleClick);
+    }
+
+    // Fill slots with apples and golden apples
+    let appleCount = apples;
+    let goldenAppleCount = goldenApples;
+
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+
+        if (goldenAppleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'images.jpg'; // Path to your golden apple image
+            img.alt = 'Golden Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleGoldenAppleClick); // Add click event listener
+            goldenAppleCount--;
+        } else if (appleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'lovepik-apple-png-image_401302520_wh1200.png'; // Path to your apple image
+            img.alt = 'Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleAppleClick); // Add click event listener
+            appleCount--;
+        }
+    }
+}
+
+// Event handler for apple click
+function handleAppleClick() {
+    if (apples > 0) {
+        apples--;
+        hunger += 10;
+        if (hunger > 100) hunger = 100;
+        level++;
+        updateStats();
+    } else {
+        alert('You have no apples!');
+    }
+}
+
+// Event handler for golden apple click
+function handleGoldenAppleClick() {
+    if (goldenApples > 0) {
+        goldenApples--;
+        hunger = 100; // Restore hunger to 100%
+        updateStats();
+    } else {
+        alert('You have no golden apples!');
+    }
+}
+
+// No need for draggable functionality anymore, so remove related functions
+
+document.getElementById('toggle-inventory').addEventListener('click', () => {
+    const inventory = document.getElementById('inventory');
+    const feedButton = document.getElementById('feed');
+    if (inventory.style.display === 'none' || inventory.style.display === '') {
+        inventory.style.display = 'flex';
+        feedButton.style.display = 'none';
+    } else {
+        inventory.style.display = 'none';
+        feedButton.style.display = 'block';
+    }
+});
+
+function updateInventory() {
+    // Clear current inventory slots
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        slot.innerHTML = ''; // Clear slot
+        slot.removeEventListener('click', handleAppleClick); // Remove any existing click listeners
+        slot.removeEventListener('click', handleGoldenAppleClick);
+    }
+
+    // Fill slots with apples and golden apples
+    let appleCount = apples;
+    let goldenAppleCount = goldenApples;
+
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+
+        if (goldenAppleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'images.jpg'; // Path to your golden apple image
+            img.alt = 'Golden Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleGoldenAppleClick); // Add click event listener
+            goldenAppleCount--;
+        } else if (appleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'lovepik-apple-png-image_401302520_wh1200.png'; // Path to your apple image
+            img.alt = 'Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleAppleClick); // Add click event listener
+            appleCount--;
+        }
+    }
+}
+
+// Event handler for apple click
+function handleAppleClick() {
+    if (apples > 0) {
+        apples--;
+        hunger += 10;
+        if (hunger > 100) hunger = 100;
+        level++;
+        updateStats();
+    } else {
+        alert('You have no apples!');
+    }
+}
+
+// Event handler for golden apple click
+function handleGoldenAppleClick() {
+    if (goldenApples > 0) {
+        goldenApples--;
+        hunger = 100; // Restore hunger to 100%
+        updateStats();
+    } else {
+        alert('You have no golden apples!');
+    }
+}
+
+
+
+
+
+
+function handleAppleClick() {
+    if (apples > 0) {
+        apples--;
+        hunger += 10;
+        if (hunger > 100) hunger = 100;
+        level++;
+        updateStats();
+    } else {
+        alert('You have no apples!');
+    }
+}
+
+function handleGoldenAppleClick() {
+    if (goldenApples > 0) {
+        goldenApples--;
+        hunger = 100; // Restore hunger to 100%
+        updateStats();
+    } else {
+        alert('You have no golden apples!');
+    }
+}
+
+// Element references
+const leaderboardEntries = document.getElementById('leaderboard-entries');
+const playerNameInput = document.getElementById('player-name');
+
+// Function to fetch active users from the backend
+async function fetchActiveUsers() {
+    try {
+        const response = await fetch('http://localhost:3000/active-users');
+        const activeUsers = await response.json();
+        updateLeaderboard(activeUsers);
+    } catch (error) {
+        console.error('Error fetching active users:', error);
+    }
+}
+
+// Function to update the leaderboard
+function updateLeaderboard(activeUsers) {
+    leaderboardEntries.innerHTML = '';
+    activeUsers.forEach(user => {
+        const entry = document.createElement('div');
+        entry.textContent = user;
+        leaderboardEntries.appendChild(entry);
+    });
+}
+
+// Event listener for saving player's name
+document.getElementById('save-name').addEventListener('click', async () => {
+    const playerName = playerNameInput.value.trim();
+    if (playerName) {
+        try {
+            await fetch('http://localhost:3000/active-users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: playerName }),
+            });
+            // Fetch the updated list of active users
+            fetchActiveUsers();
+        } catch (error) {
+            console.error('Error adding user:', error);
+        }
+    } else {
+        alert('Please enter a name');
+    }
+});
+
+// Fetch active users when the page loads
+
+
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const port = 3000;
+
+app.use(cors());
+app.use(express.json());
+
+// In-memory storage for active users
+let activeUsers = [];
+
+// Endpoint to get active users
+app.get('/active-users', (req, res) => {
+    res.json(activeUsers);
+});
+
+// Endpoint to add an active user
+app.post('/active-users', (req, res) => {
+    const { name } = req.body;
+    if (name && !activeUsers.includes(name)) {
+        activeUsers.push(name);
+        res.status(200).send('User added');
+    } else {
+        res.status(400).send('User already exists or invalid name');
+    }
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+
+document.getElementById('save-name').addEventListener('click', async () => {
+    const playerName = playerNameInput.value.trim();
+    console.log('Player Name:', playerName);
+    if (playerName) {
+        try {
+            const response = await fetch('http://localhost:3000/active-users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: playerName }),
+            });
+            console.log('Add User Response:', response);
+            fetchActiveUsers();
+        } catch (error) {
+            console.error('Error adding user:', error);
+        }
+    } else {
+        alert('Please enter a name');
+    }
+});
+
+// Backend POST endpoint
+app.post('/active-users', (req, res) => {
+    const { name } = req.body;
+    console.log('Received name:', name);
+    if (name && !activeUsers.includes(name)) {
+        activeUsers.push(name);
+        console.log('Active Users:', activeUsers);
+        res.status(200).send('User added');
+    } else {
+        res.status(400).send('User already exists or invalid name');
+    }
+});
+
+
+
+
+
+
+
+
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V7 beta (prev version V6)</p>
+-webkit-text-fill-color: transparent;" >V7 (prev version V7 beta)</p>
 </body>
 </html>
