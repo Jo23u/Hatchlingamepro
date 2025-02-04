@@ -469,17 +469,8 @@ button.dark-mode {
     <div class="menu" id="menu">
         <button id="close-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
         <p>Hello dear player, this is the main menu!</p>
-       <!-- Leaderboard Section -->
-<div id="leaderboard">
-    <h3>Leaderboard</h3>
-    <p style="color: red;" >Please do not type your name more than 2 times!</p>
-    <div id="leaderboard-entries"></div>
-</div>
+       
 
-<!-- Input for Player Name -->
-<input type="text" id="player-name" placeholder="Enter your name">
-<button id="save-name">Save Name</button>
-<br>
 
         <a href="./CHRlink.html">
             <button>Characters</button>
@@ -590,10 +581,18 @@ button.dark-mode {
             <div class="slot" id="slot-6"></div>
             </div>
 
+            <div id="leaderboard">
+                <h3>Leaderboard</h3>
+                <div id="leaderboard-entries"></div>
+                <input type="text" id="player-name" placeholder="Enter your name">
+<button id="save-name">Save Name</button>
+
+            </div>
+            
+
 
     <script>
     let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0,depositedCoins = 0;
-    let playerName = '', leaderboard = [];
     let infiniteStates = false; // Initially set to false
     let stateDecrementInterval;
     let autoSaveEnabled = false; // Auto-save is disabled by default
@@ -692,16 +691,7 @@ document.body.appendChild(scriptTag);
         menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
     });
 
-    document.getElementById('save-name').addEventListener('click', () => {
-        if (playerNameInput.value && !leaderboard.some(player => player.name === playerNameInput.value)) {
-            playerName = playerNameInput.value;
-            leaderboard.push({ name: playerName });
-            updateLeaderboard();
-            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        } else {
-            alert('You can only appear once on the leaderboard!');
-        }
-    });
+  
 
     document.getElementById('save-progress').addEventListener('click', () => {
     showStatus('');
@@ -799,23 +789,13 @@ window.onload = () => {
             apples = 0;
             infiniteStates = false;
             level = 1;
-            leaderboard = [];
             localStorage.removeItem('characterGame');
-            localStorage.removeItem('leaderboard');
             updateStats();
-            updateLeaderboard();
             alert('Data reset successfully!');
         }
     });
 
-    function updateLeaderboard() {
-        leaderboardEntries.innerHTML = '';
-        leaderboard.forEach(player => {
-            const entry = document.createElement('div');
-            entry.textContent = `${player.name} -`;
-            leaderboardEntries.appendChild(entry);
-        });
-    }
+
 
     document.getElementById('earn-apples').addEventListener('click', () => {
         const earnApplesButton = document.getElementById('earn-apples');
@@ -1748,14 +1728,12 @@ function handleGoldenAppleClick() {
     }
 }
 
-// Element references
-const leaderboardEntries = document.getElementById('leaderboard-entries');
-const playerNameInput = document.getElementById('player-name');
-
-// Function to fetch active users from the backend
 async function fetchActiveUsers() {
     try {
-        const response = await fetch('http://localhost:3000/active-users');
+        const response = await fetch('http://localhost:3000/active-users'); // Use local server URL
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
         const activeUsers = await response.json();
         updateLeaderboard(activeUsers);
     } catch (error) {
@@ -1763,30 +1741,33 @@ async function fetchActiveUsers() {
     }
 }
 
-// Function to update the leaderboard
 function updateLeaderboard(activeUsers) {
+    const leaderboardEntries = document.getElementById('leaderboard-entries');
     leaderboardEntries.innerHTML = '';
-    activeUsers.forEach(user => {
-        const entry = document.createElement('div');
-        entry.textContent = user;
-        leaderboardEntries.appendChild(entry);
-    });
+    if (Array.isArray(activeUsers)) {
+        activeUsers.forEach(user => {
+            const entry = document.createElement('div');
+            entry.textContent = user;
+            leaderboardEntries.appendChild(entry);
+        });
+    } else {
+        leaderboardEntries.innerHTML = '<div>No active users.</div>';
+    }
 }
 
-// Event listener for saving player's name
 document.getElementById('save-name').addEventListener('click', async () => {
+    const playerNameInput = document.getElementById('player-name');
     const playerName = playerNameInput.value.trim();
     if (playerName) {
         try {
-            await fetch('http://localhost:3000/active-users', {
+            await fetch('http://localhost:3000/active-users', { // Use local server URL
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ name: playerName }),
             });
-            // Fetch the updated list of active users
-            fetchActiveUsers();
+            fetchActiveUsers(); // Refresh the leaderboard
         } catch (error) {
             console.error('Error adding user:', error);
         }
@@ -1794,76 +1775,6 @@ document.getElementById('save-name').addEventListener('click', async () => {
         alert('Please enter a name');
     }
 });
-
-// Fetch active users when the page loads
-
-
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const port = 3000;
-
-app.use(cors());
-app.use(express.json());
-
-// In-memory storage for active users
-let activeUsers = [];
-
-// Endpoint to get active users
-app.get('/active-users', (req, res) => {
-    res.json(activeUsers);
-});
-
-// Endpoint to add an active user
-app.post('/active-users', (req, res) => {
-    const { name } = req.body;
-    if (name && !activeUsers.includes(name)) {
-        activeUsers.push(name);
-        res.status(200).send('User added');
-    } else {
-        res.status(400).send('User already exists or invalid name');
-    }
-});
-
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
-
-document.getElementById('save-name').addEventListener('click', async () => {
-    const playerName = playerNameInput.value.trim();
-    console.log('Player Name:', playerName);
-    if (playerName) {
-        try {
-            const response = await fetch('7bfeae4d-91d9-4db8-9936-b4f7b7ddfba1', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: playerName }),
-            });
-            console.log('Add User Response:', response);
-            fetchActiveUsers();
-        } catch (error) {
-            console.error('Error adding user:', error);
-        }
-    } else {
-        alert('Please enter a name');
-    }
-});
-
-// Backend POST endpoint
-app.post('/active-users', (req, res) => {
-    const { name } = req.body;
-    console.log('Received name:', name);
-    if (name && !activeUsers.includes(name)) {
-        activeUsers.push(name);
-        console.log('Active Users:', activeUsers);
-        res.status(200).send('User added');
-    } else {
-        res.status(400).send('User already exists or invalid name');
-    }
-});
-
 
 
 
