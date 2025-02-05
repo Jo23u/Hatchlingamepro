@@ -415,6 +415,88 @@ button.dark-mode {
     height: 40px;
 }
 
+/* Styles for the Progress Menu */
+#progress-menu {
+    display: none;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+#progress-menu h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+#progress-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#progress-menu li {
+    margin: 5px 0;
+}
+
+#toggle-progress-menu {
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Add this to your existing CSS */
+.completed-quest {
+    color: green;
+    font-weight: bold;
+}
+
+/* Scooter Game Canvas for Small Screens */
+@media screen and (max-width: 600px) {
+    #scooter-game-canvas {
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+    }
+}
+
+#account-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 2px solid black;
+    padding: 20px;
+    z-index: 1000;
+    width: 300px;
+}
+
+#toggle-account-menu {
+    bottom: 50px; /* Adjust positioning to fit the layout */
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#toggle-account-menu:hover {
+    background-color: #005f75;
+}
+
+
 
     </style>
 </head>
@@ -450,8 +532,9 @@ button.dark-mode {
         <button id="afkButton">Enter AFK Zone</button>
 <button id="closeAfkButton" style="display: none;">Close AFK Zone</button>
 <button id="toggle-deposit-menu">Deposit/Withdraw Menu
-    <button id="play-scooter-game">Play Scooter Game</button>
+    <button id="play-scooter-game">Play Cube Game</button>
     <button id="toggle-inventory">Toggle Inventory</button>
+    <button id="toggle-progress-menu">Show Progress</button>
     <button id="toggle-dark-mode">Toggle Dark Mode</button>
         <button id="NTC">Notice</button>
 
@@ -507,7 +590,7 @@ button.dark-mode {
         <button id="buyBoostPotion">Buy Boost Potion (30 Coins)</button>
         <!-- Inside your Shop Menu -->
 <button id="infinite-states-button">Enable Infinite States (900,000 coins)</button>
-<button id="buyApples">5000 APPLES! (1000 coins)</button>
+<button id="buyApples">5000 APPLES! (2000 coins)</button>
 <button id="open-golden-chest">Open Golden Chest (400 coins)</button>
 
         <p id="shopFeedback"></p>
@@ -581,8 +664,32 @@ button.dark-mode {
             <div class="slot" id="slot-6"></div>
             </div>
 
+            <!-- Achievement Progress Section -->
+<div id="progress-menu" class="menu" style="display: none;">
+    <button id="close-progress-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <h3>Achievements and Progress</h3>
+    <ul>
+        <li id="quest-feedHatchling">Feed the hatchling 5 times - Reward: 100 coins</li>
+        <li id="quest-buyFromShop">Buy something from the shop - Reward: 200 coins</li>
+        <li id="quest-fuseApples">Fuse 10 apples into a golden apple - Reward: 200 coins</li>
+        <li id="quest-buyGoldenChest">Buy a golden chest - Reward: 700 coins</li>
+        <p style="color: cadetblue;" >Come back later for more quests!</p>
+    </ul>
+</div>
 
-            
+<div id="account-menu" class="menu" style="display: none;">
+    <button id="close-account-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <h3>Account Management</h3>
+    <input type="text" id="username" placeholder="Enter Username">
+    <button id="create-account">Create Account</button>
+    <button id="login">Log In</button>
+    <p id="account-feedback"></p>
+</div>
+<button id="toggle-account-menu">Accounts</button>
+
+
+
+    
 
 
     <script>
@@ -690,42 +797,45 @@ document.body.appendChild(scriptTag);
     document.getElementById('save-progress').addEventListener('click', () => {
     showStatus('');
     setTimeout(() => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins }));
+        saveProgress(currentUser); // Save progress for the current user
         alert('Progress saved!');
         hideStatus();
     }, 2000); // Optional delay for better UX
 });
 
+
 function autoSave() {
     showStatus('');
     setTimeout(() => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins }));
+        saveProgress(currentUser); // Save progress for the current user
         console.log('Game auto-saved!'); // Replace with alert or other feedback if needed
         hideStatus();
     }, 2000); // Optional delay for better UX
 }
 
 
-// Function to start auto-saving at regular intervals
+
 function startAutoSave() {
     if (autoSaveEnabled) {
         setInterval(autoSave, 5000); // Save every 5 seconds (can adjust the time)
     }
 }
 
-function saveProgress() {
+function saveProgress(user = currentUser) {
     const progress = {
         hunger,
         cleanliness,
         happiness,
         coins,
         apples,
-        goldenApples, // Add golden apples
+        goldenApples,
         level,
-        depositedCoins
+        depositedCoins,
+        quests
     };
-    localStorage.setItem('characterGame', JSON.stringify(progress));
+    localStorage.setItem(user, JSON.stringify(progress));
 }
+
 
 
 document.getElementById('toggle-autosave').addEventListener('click', () => {
@@ -743,12 +853,25 @@ window.onload = () => {
         happiness = savedData.happiness;
         coins = savedData.coins;
         apples = savedData.apples;
-        goldenApples = savedData.goldenApples || 0; // Default to 0 if undefined
+        goldenApples = savedData.goldenApples || 0;
         level = savedData.level;
-        depositedCoins = savedData.depositedCoins ||0;
+        depositedCoins = savedData.depositedCoins || 0;
+        quests = savedData.quests || quests;
+
+        // Apply the completed quest class to completed quests
+        quests.forEach(quest => {
+            if (quest.completed) {
+                document.getElementById(`quest-${quest.id}`).classList.add('completed-quest');
+            }
+        });
+
+        const defaultData = localStorage.getItem('default');
+    if (!defaultData) {
+        saveProgress('default'); // Save the current data as default
+    }
+    loadUserData(currentUser);
+
         updateStats();
-        fetchActiveUsers();
-        
     }
 };
 
@@ -968,8 +1091,8 @@ toggleMenuButton.addEventListener('click', () => {
 
 // Handle "Buy 1000 Apples (500 Coins)" Button
 document.getElementById('buyApples').addEventListener('click', () => {
-    if (coins >= 1000) {
-        coins -= 1000; // Deduct 500 coins
+    if (coins >= 2000) {
+        coins -= 2000; // Deduct 500 coins
         apples += 5000; // Add 1000 apples
         updateStats(); // Update the stats on the screen
         document.getElementById('shopFeedback').textContent = 'Successfully bought 5000 apples!';
@@ -1454,38 +1577,30 @@ document.getElementById('close-scooter-game').addEventListener('click', () => {
 });
 
 document.getElementById('play-scooter-game').addEventListener('click', () => {
-    if (canPlayScooterGame()) {
-        document.getElementById('scooter-game-menu').style.display = 'block';
-        startScooterGame();
-    } else {
-        alert('You need to wait for the cooldown period to finish before playing again!');
-    }
-});
-
-document.getElementById('close-scooter-game').addEventListener('click', () => {
-    stopScooterGame();
-    document.getElementById('scooter-game-menu').style.display = 'none';
-});
-
-let scooterGame, scooterPlayer, scooterObstacles, scooterInterval;
-
-document.getElementById('play-scooter-game').addEventListener('click', () => {
     document.getElementById('scooter-game-menu').style.display = 'block';
     startScooterGame();
 });
 
 document.getElementById('close-scooter-game').addEventListener('click', () => {
-    document.getElementById('scooter-game-menu').style.display = 'none';
     stopScooterGame();
+    document.getElementById('scooter-game-menu').style.display = 'none';
 });
 
-
 function startScooterGame() {
-    gameRunning = true;
     const canvas = document.getElementById('scooter-game-canvas');
     const ctx = canvas.getContext('2d');
-    scooterGame = { canvas, ctx, width: 800, height: 400, speed: 5, playing: true };
-    scooterPlayer = { x: 50, y: 300, width: 50, height: 50, vy: 0, jumping: false };
+
+    // Set canvas dimensions based on screen size
+    if (window.innerWidth <= 600) {
+        canvas.width = window.innerWidth - 40; // 20px padding on each side
+        canvas.height = (canvas.width / 2); // Maintain aspect ratio (16:9)
+    } else {
+        canvas.width = 800;
+        canvas.height = 400;
+    }
+
+    scooterGame = { canvas, ctx, width: canvas.width, height: canvas.height, speed: 5, playing: true };
+    scooterPlayer = { x: 50, y: scooterGame.height - 100, width: 50, height: 50, vy: 0, jumping: false };
     scooterObstacles = [];
     scooterInterval = setInterval(updateScooterGame, 20);
 
@@ -1494,9 +1609,7 @@ function startScooterGame() {
     canvas.addEventListener('touchstart', handleJump); // For touch events
 }
 
-
 function stopScooterGame() {
-    gameRunning = false;
     clearInterval(scooterInterval);
     document.removeEventListener('keydown', handleJump);
     const canvas = document.getElementById('scooter-game-canvas');
@@ -1506,16 +1619,46 @@ function stopScooterGame() {
     document.getElementById('scooter-game-menu').style.display = 'none';
 }
 
+function updateScooterGame() {
+    const { canvas, ctx, width, height, speed } = scooterGame;
+    ctx.clearRect(0, 0, width, height);
+
+    // Update player
+    scooterPlayer.y += scooterPlayer.vy;
+    scooterPlayer.vy += 1;
+    if (scooterPlayer.y >= height - scooterPlayer.height) {
+        scooterPlayer.y = height - scooterPlayer.height;
+        scooterPlayer.jumping = false;
+    }
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(scooterPlayer.x, scooterPlayer.y, scooterPlayer.width, scooterPlayer.height);
+
+    // Update obstacles
+    if (Math.random() < 0.02) {
+        scooterObstacles.push({ x: width, y: height - 50, width: 50, height: 50 });
+    }
+    ctx.fillStyle = 'red';
+    for (let i = 0; i < scooterObstacles.length; i++) {
+        const obs = scooterObstacles[i];
+        obs.x -= speed;
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        if (obs.x < 0) scooterObstacles.splice(i, 1);
+        if (obs.x < scooterPlayer.x + scooterPlayer.width && obs.x + obs.width > scooterPlayer.x && obs.y < scooterPlayer.y + scooterPlayer.height && obs.y + obs.height > scooterPlayer.y) {
+            stopScooterGame();
+        }
+    }
+}
 
 function handleJump(e) {
-    if ((e.type === 'keydown' && e.code !== 'Space') || (e.type === 'touchstart' && !gameRunning)) return;
-    if (!scooterPlayer.jumping && gameRunning) {
+    if ((e.type === 'keydown' && e.code !== 'Space') || (e.type === 'touchstart' && !scooterGame.playing)) return;
+    if (!scooterPlayer.jumping) {
         scooterPlayer.vy = -15;
         scooterPlayer.jumping = true;
-        coins += 5; // Give 50 coins for each jump
+        coins += 5; // Give 5 coins for each jump
         updateStats();
     }
 }
+
 
 
 function updateScooterGame() {
@@ -1722,19 +1865,174 @@ function handleGoldenAppleClick() {
     }
 }
 
+let quests = [
+    { id: 'feedHatchling', description: 'Feed the hatchling 5 times', requirement: 5, progress: 0, reward: 100, completed: false },
+    { id: 'buyFromShop', description: 'Buy something from the shop', requirement: 1, progress: 0, reward: 200, completed: false },
+    { id: 'fuseApples', description: 'Fuse 10 apples into a golden apple', requirement: 10, progress: 0, reward: 200, completed: false },
+    { id: 'buyGoldenChest', description: 'Buy a golden chest', requirement: 1, progress: 0, reward: 700, completed: false }
+];
+
+function updateQuestProgress(questId, increment = 1) {
+    let quest = quests.find(q => q.id === questId);
+    if (!quest.completed) {
+        quest.progress += increment;
+        if (quest.progress >= quest.requirement) {
+            quest.completed = true;
+            coins += quest.reward;
+            alert(`Quest Completed: ${quest.description}\nReward: ${quest.reward} coins`);
+            document.getElementById(`quest-${questId}`).classList.add('completed-quest'); // Add the completed quest class
+            updateStats();
+        }
+    }
+    saveProgress();
+}
 
 
+document.getElementById('feed').addEventListener('click', () => {
+    // Existing feeding logic
+    updateQuestProgress('feedHatchling');
+});
+
+document.getElementById('buyBoostPotion').addEventListener('click', () => {
+    // Existing shop logic
+    updateQuestProgress('buyFromShop');
+});
+
+document.getElementById('fuse-apples-button').addEventListener('click', () => {
+    // Existing fusing logic
+    updateQuestProgress('fuseApples', 10); // Increment by 10 for fusing 10 apples
+});
+
+document.getElementById('open-golden-chest').addEventListener('click', () => {
+    // Existing chest logic
+    updateQuestProgress('buyGoldenChest');
+});
+
+document.getElementById('toggle-progress-menu').addEventListener('click', () => {
+    const progressMenu = document.getElementById('progress-menu');
+    progressMenu.style.display = progressMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+document.getElementById('close-progress-menu').addEventListener('click', () => {
+    document.getElementById('progress-menu').style.display = 'none';
+});
+
+document.getElementById('toggle-account-menu').addEventListener('click', () => {
+    const accountMenu = document.getElementById('account-menu');
+    accountMenu.style.display = accountMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+document.getElementById('close-account-menu').addEventListener('click', () => {
+    document.getElementById('account-menu').style.display = 'none';
+});
+
+let currentUser = 'default'; // Set the default user initially
+
+function loadUserData(user) {
+    const savedData = JSON.parse(localStorage.getItem(user));
+    if (savedData) {
+        hunger = savedData.hunger;
+        cleanliness = savedData.cleanliness;
+        happiness = savedData.happiness;
+        coins = savedData.coins;
+        apples = savedData.apples;
+        goldenApples = savedData.goldenApples || 0; // Default to 0 if undefined
+        level = savedData.level;
+        depositedCoins = savedData.depositedCoins || 0;
+        quests = savedData.quests || quests;
+        updateStats();
+    }
+}
 
 
+function createAccount(username) {
+    if (!username) {
+        alert("Please enter a username.");
+        return;
+    }
+    if (localStorage.getItem(username)) {
+        alert("Username already exists. Please choose another one.");
+        return;
+    }
+
+    const newAccountData = {
+        hunger: 100,
+        cleanliness: 100,
+        happiness: 100,
+        coins: 0,
+        apples: 0,
+        goldenApples: 0,
+        level: 1,
+        depositedCoins: 0,
+        quests: [/* ...initial quest data... */]
+    };
+
+    localStorage.setItem(username, JSON.stringify(newAccountData));
+    alert("Account created successfully!");
+    document.getElementById('account-feedback').textContent = "Account created successfully!";
+}
+
+function logIn(username) {
+    if (!username) {
+        alert("Please enter a username.");
+        return;
+    }
+    const userData = localStorage.getItem(username);
+    if (!userData) {
+        alert("Account does not exist. Please create an account first.");
+        return;
+    }
+
+    currentUser = username;
+    loadUserData(currentUser);
+    document.getElementById('account-feedback').textContent = `Logged in as ${username}`;
+    document.getElementById('account-menu').style.display = 'none';
+}
 
 
+document.getElementById('create-account').addEventListener('click', () => {
+    const username = document.getElementById('username').value;
+    createAccount(username);
+});
 
+document.getElementById('login').addEventListener('click', () => {
+    const username = document.getElementById('username').value;
+    logIn(username);
+});
+
+document.getElementById('toggle-account-menu').addEventListener('click', () => {
+    const accountMenu = document.getElementById('account-menu');
+    accountMenu.style.display = accountMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+document.getElementById('close-account-menu').addEventListener('click', () => {
+    document.getElementById('account-menu').style.display = 'none';
+});
+
+document.getElementById('create-account').addEventListener('click', () => {
+    const username = document.getElementById('username').value;
+    createAccount(username);
+});
+
+document.getElementById('login').addEventListener('click', () => {
+    const username = document.getElementById('username').value;
+    logIn(username);
+});
+
+document.getElementById('toggle-account-menu').addEventListener('click', () => {
+    const accountMenu = document.getElementById('account-menu');
+    accountMenu.style.display = accountMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+document.getElementById('close-account-menu').addEventListener('click', () => {
+    document.getElementById('account-menu').style.display = 'none';
+});
 
 
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V7 (prev version V7 beta)</p>
+-webkit-text-fill-color: transparent;" >V8 beta (prev version V7)</p>
 </body>
 </html>
