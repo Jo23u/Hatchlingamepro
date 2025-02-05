@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talking Hatchling Pro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .character-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .character {
+            width: 150px;
+            height: 150px;
+            background-image: url('./dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png');
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            transition: background-image 0.3s, transform 0.2s;
+        }
+
+        
+
+        .stats {
+            margin-bottom: 10px;
+        }
+
+        .stat {
+            margin: 5px 0;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transition: transform 0.2s;
+            transform: scale(1.1); /* Slightly enlarge the button on hover */
+        }
+
+        .menu {
+            display: none;
+            background: #ffffff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .phone {
+            width: 150px;
+            height: 300px;
+            border: 5px solid black;
+            background-color: #ddd;
+            border-radius: 20px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        iframe {
+            width: 300px;
+            height: 200px;
+        }
+
+        .background-menu {
+    background: #fff;
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+}
+
+@media screen and (max-width: 570px) {
+            body {
+                padding: 10px;
+                background-color: lightblue;
+                color: red;
+            }
+        }
+
+        #shopMenu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border: 2px solid black;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+#toggleShopMenu {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#toggleShopMenu:hover {
+    background-color: #005f75;
+}
+
+#shopFeedback {
+    margin-top: 10px;
+    font-size: 14px;
+    color: green;
+}
+
+@keyframes rainbowGlow {
+    0% { box-shadow: 0 0 10px red; }
+    17% { box-shadow: 0 0 10px orange; }
+    34% { box-shadow: 0 0 10px yellow; }
+    51% { box-shadow: 0 0 10px green; }
+    68% { box-shadow: 0 0 10px blue; }
+    85% { box-shadow: 0 0 10px indigo; }
+    100% { box-shadow: 0 0 10px violet; }
+}
+
+#buyApples {
+    animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    background-size: 300%; /* Make the gradient larger for smoother transitions */
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+#buyApples:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#feed:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#open-chest:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#shower:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#toggle-menu:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#save-progress:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#reset-data:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#show-phone:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#show-background:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#reset-background:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#toggleShopMenu:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#NTC:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#fuse-menu-button {
+    animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
+    background: linear-gradient(90deg, rgb(21, 1, 238), rgb(128, 0, 255), rgb(255, 242, 0), rgb(255, 4, 4), rgb(241, 0, 0), indigo, violet);
+    background-size: 300%; /* Make the gradient larger for smoother transitions */
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#fuse-menu-button:hover {
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+    transition: transform 0.2s;
+}
+
+#status-indicator {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Make width and height equal for a perfect circle */
+    border-radius: 50%; /* Makes it a circle */
+    background-color: yellow; /* Circle color */
+    display: none; /* Hidden by default */
+    z-index: 1000; /* Ensure it's above other elements */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Optional shadow for better visibility */
+}
+
+#daily-login-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 2px solid #ccc;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+#daily-login-menu button {
+    margin: 5px;
+}
+
+/* Classic Theme */
+.classic {
+    background-color: #f0f8ff;
+    border: 5px solid #000000;
+}
+
+/* Retro Theme */
+.retro {
+    background-color: #f0e68c;
+    border: 5px solid #8b4513;
+}
+
+/* Futuristic Theme */
+.futuristic {
+    background-color: #1c1c1c;
+    border: 5px solid #00ff00;
+}
+
+/* Add transition effects for smooth theme changes */
+.phone {
+    transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+#wheelContainer {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 20px auto;
+        border-radius: 50%;
+        border: 5px solid #333;
+        overflow: hidden;
+    }
+
+    #wheel {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(
+            gold 0% 20%, 
+            lightblue 20% 40%, 
+            lightgreen 40% 60%, 
+            orange 60% 80%, 
+            pink 80% 100%
+        );
+        transform: rotate(0deg);
+        transition: transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    }
+
+
+
+#lucky-box {
+  position: fixed;
+  left: 10px;
+  bottom: 20%;
+  width: 150px;
+  height: 150px;
+  background-color: gold;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 10px;
+  border: 3px solid #d4af37;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease-in-out;
+}
+
+#lucky-box:hover {
+  transform: scale(1.1);
+}
+
+body.dark-mode {
+    background-color: var(--background-color-dark);
+    color: var(--text-color-dark);
+}
+
+button.dark-mode {
+    background-color: var(--button-background-dark);
+    color: var(--text-color-dark);
+}
+
+:root {
+    --background-color-light: #f0f8ff;
+    --background-color-dark: #1c1c1c;
+    --text-color-light: #000;
+    --text-color-dark: #fff;
+    --button-background-light: #4caf50;
+    --button-background-dark: #555;
+    --menu-background-light: #464242;
+    --menu-background-dark: #333;
+}
+.menu, .background-menu {
+    transition: background-color 0.3s, color 0.3s;
+    color: var(--text-color-light);
+}
+
+#inventory {
+    display: flex;
+    flex-wrap: wrap;
+    width: 180px;
+    margin: 10px;
+    background: #f0f8ff;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+
+
+
+.slot {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ddd;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
+
+.slot img {
+    width: 40px;
+    height: 40px;
+}
+
+/* Styles for the Progress Menu */
+#progress-menu {
+    display: none;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+#progress-menu h3 {
+    margin-top: 0;
+    text-align: center;
+}
+
+#progress-menu ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#progress-menu li {
+    margin: 5px 0;
+}
+
+#toggle-progress-menu {
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Add this to your existing CSS */
+.completed-quest {
+    color: green;
+    font-weight: bold;
+}
+
+/* Scooter Game Canvas for Small Screens */
+@media screen and (max-width: 600px) {
+    #scooter-game-canvas {
+        width: 100%;
+        height: auto; /* Maintain aspect ratio */
+    }
+}
+
+
+
+
+    </style>
+</head>
+<body>
+    <h1 style="background: #B8E1FC;
+    background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;">Talking Hatchling PRO</h1>
+
+    <div class="character-container">
+        <div id="character" class="character"></div>
+        <div class="stats">
+            <div class="stat">Hunger: <span id="hunger">100</span></div>
+            <div class="stat">Cleanliness: <span id="cleanliness">100</span></div>
+            <div class="stat">Happiness: <span id="happiness">100</span></div>
+            <div class="stat">Coins: <span id="coins">0</span></div>
+            <div class="stat">Apples: <span id="apples">0</span></div>
+            <div id="golden-apples">Golden Apples: 0</div>
+            <span id="luckPotionDisplay">Luck Potions: 0</span>
+            <div class="stat">Level: <span id="level">1</span></div>
+        </div>
+        <button id="feed">Feed Apple</button>
+        <button id="open-chest">Open Chest (-10 Coins)</button>
+        <button id="shower">Shower</button>
+        <button id="toggle-menu">Toggle Menu</button>
+        <button id="save-progress">Save Progress</button>
+        <button id="reset-data">Reset Data</button>
+        <button id="show-phone">Show Phone</button>
+        <button id="show-background">Show Background</button>
+        <button id="reset-background">Reset Background</button>
+        <button id="toggleShopMenu">Shop</button>
+        <button id="fuse-menu-button">Fuse Apples</button>
+        <button id="afkButton">Enter AFK Zone</button>
+<button id="closeAfkButton" style="display: none;">Close AFK Zone</button>
+<button id="toggle-deposit-menu">Deposit/Withdraw Menu
+    <button id="play-scooter-game">Play Cube Game</button>
+    <button id="toggle-inventory">Toggle Inventory</button>
+    <button id="toggle-progress-menu">Show Progress</button>
+    <button id="toggle-dark-mode">Toggle Dark Mode</button>
+        <button id="NTC">Notice</button>
+
+    </div>
+
+    <div class="background-menu" id="background-menu" style="display: none;">
+        <p>Choose a background:</p>
+        <button id="background-1">City</button>
+        <button id="background-2">Playground</button>
+        <button id="background-3">Forest</button>
+        <button id="background-4">White wall</button>
+    </div>
+    
+
+    <div class="menu" id="menu">
+        <button id="close-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+        <p>Hello dear player, this is the main menu!</p>
+       
+        <div >
+            <input type="text" id="username" placeholder="Enter user">
+            <button style="color: blue; background-color: #555;" onclick="createUserLink()">Create User/ Login user (Automatically detects)</button>
+        </div>
+        <div id="user-links"></div>
+
+        <a href="./CHRlink.html">
+            <button>Characters</button>
+        </a>
+        <button id="toggle-autosave">Enable Auto Save</button>
+        <button id="daily-login-button">Daily Login</button>
+        <br>
+        <a href="https://jo23u.github.io/hatchlingnew/">Classic version</a>
+        <a href="https://jo23u.github.io/hatchlingnew/hatchlingame+.html">Plus version</a>
+        <h3>Watch this video if you want!</h3>
+        <iframe id="reward-video" width="560" height="315" src="https://www.youtube.com/embed/U6ULeO8X1dI?enablejsapi=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <!-- Claim coins button -->
+        <button id="claim-coins" style="display: none;">Claim 200 Coins</button>
+        <div>
+            <p>if the text is red you are on a small sized screen, if the text is black you are on a normal sized screen.</p>
+        </div>
+    </div>
+
+    <div class="phone" id="phone">
+        <p>Click below to earn apples!</p>
+        <button id="earn-apples">Earn Apples</button>
+        <button onclick="copyLink()">Share link</button>
+        <button id="close-phone">Close Phone</button>
+        <select id="theme-selector" onchange="changePhoneTheme(this.value)">
+            <option value="classic">Classic</option>
+            <option value="retro">Retro</option>
+            <option value="futuristic">Futuristic</option>
+          </select>
+          
+    </div>
+
+    <div id="shopMenu" style="display: none;">
+        <button id="close-men1" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+        <button id="buyBoostPotion">Buy Boost Potion (30 Coins)</button>
+        <!-- Inside your Shop Menu -->
+<button id="infinite-states-button">Enable Infinite States (900,000 coins)</button>
+<button id="buyApples">5000 APPLES! (2000 coins)</button>
+<button id="open-golden-chest">Open Golden Chest (400 coins)</button>
+
+        <p id="shopFeedback"></p>
+    </div>
+
+    <div id="NTCM" style="display: none;">
+        <!-- Your editable content goes here -->
+        <h2>Notice</h2>
+        <p>Please make sure you save your data after buying or purchasing anything, after you save your data your data is safely stored in localstorage
+            and even is there is an update it will still remain as it is.
+            V6 beta - Please make sure you dont reload the page if you have auto save on, it might turn off automatically after reloading or closing the game!
+            <br>
+            V7 beta - please make sure you use your luck potions because there is no way to get it back if the page is reloaded or lost!
+            <br>
+            V7 - Progress bar is now removed.
+        </p>
+    </div>
+
+    <div id="fuse-menu" style="display: none;">
+        <p>Fuse 10 Apples into 1 Golden Apple for 30 Coins?</p>
+        <button id="fuse-apples-button">Fuse Now</button>
+        <button id="close-fuse-menu">Cancel</button>
+        <button id="use-golden-apple">Feed Golden Apple</button>
+    </div>
+
+    <div id="status-indicator" style="display: none;">Loading...</div>
+
+    <div id="daily-login-menu" style="display: none;">
+        <h2>Daily Login Rewards</h2>
+        <p id="daily-login-info"></p>
+        <button id="claim-daily-reward">Claim Reward</button>
+        <button id="close-daily-menu">Close</button>
+    </div>
+
+    <div id="wheelContainer">
+        <div id="wheel">Spin!</div>
+    </div>
+    <button id="spinButton">Spin the Wheel</button>
+    <button id="close-men4" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <button id="show-menu1" style="float: right; font-size: 16px; background: rgb(0, 255, 8); color: white; border: none; border-radius: 5px; cursor: pointer;">✔</button>
+    <button id="buyLuckPotion">Buy Luck Potion (100 Coins)</button>
+
+
+      <div id="lucky-box">
+        🎁 Click for a Reward!
+      </div>
+      
+    
+
+<div class="menu" id="deposit-menu" style="display: none;">
+    <button id="close-deposit-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <p>Manage your coins:</p>
+    <button id="deposit-coins">Deposit Coins</button>
+    <button id="withdraw-coins">Withdraw Coins</button>
+    <div class="stat">Deposited Coins: <span id="deposited-coins">0</span>
+    </div>
+    </div>
+
+    <div class="menu" id="scooter-game-menu" style="display: none;">
+        <button id="close-scooter-game" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+        <canvas id="scooter-game-canvas" width="800" height="400"></canvas>
+        <p>Press space to jump over obstacles. Each jump gives 5 coins!</p>
+        </div>
+
+        <div id="inventory" class="inventory" style="display: none;">
+            <div class="slot" id="slot-1"></div>
+            <div class="slot" id="slot-2"></div>
+            <div class="slot" id="slot-3"></div>
+            <div class="slot" id="slot-4"></div>
+            <div class="slot" id="slot-5"></div>
+            <div class="slot" id="slot-6"></div>
+            </div>
+
+            <!-- Achievement Progress Section -->
+<div id="progress-menu" class="menu" style="display: none;">
+    <button id="close-progress-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
+    <h3>Achievements and Progress</h3>
+    <ul>
+        <li id="quest-feedHatchling">Feed the hatchling 5 times - Reward: 100 coins</li>
+        <li id="quest-buyFromShop">Buy a boost potion - Reward: 200 coins</li>
+        <li id="quest-fuseApples">Fuse 10 apples into a golden apple - Reward: 200 coins</li>
+        <li id="quest-buyGoldenChest">Buy a golden chest - Reward: 700 coins</li>
+        <p style="color: cadetblue;" >Come back later for more quests!</p>
+    </ul>
+</div>
+
+
+
+    
+            
+            
+
+
+            
+
+
+    <script>
+    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0,depositedCoins = 0;
+    let infiniteStates = false; // Initially set to false
+    let stateDecrementInterval;
+    let autoSaveEnabled = false; // Auto-save is disabled by default
+    let isInAfkZone = false; // Flag to track if the user is in AFK zone
+let afkInterval; // Interval to reward coins while in AFK zone
+let dailySpinAvailable = true; // Track if the first spin is free today
+    let luckPotions = 0; // Track luck potions available
+    let isSpinning = false; // Prevent multiple spins at the same time
+let lastLuckyBoxClaim = localStorage.getItem("lastLuckyBoxClaim") || null;
+
+// Initialize YouTube Player API
+function onYouTubePlayerAPIReady() {
+    videoPlayer = new YT.Player('reward-video', {
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+}
+
+// Track the player's video state (playing, paused, etc.)
+function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+        let checkTimeInterval = setInterval(() => {
+            let currentTime = videoPlayer.getCurrentTime();
+            if (currentTime >= 45) { // Reward after 45 seconds
+                document.getElementById('claim-coins').style.display = 'block'; // Show the claim button
+                clearInterval(checkTimeInterval); // Stop checking the time once the condition is met
+            }
+        }, 1000);
+    }
+}
+
+// Handle claim coins button click
+document.getElementById('claim-coins').addEventListener('click', () => {
+    coins += 200; // Add 200 coins to the user's total
+    alert('You have claimed 200 coins!'); // Notify the user
+    document.getElementById('claim-coins').style.display = 'none'; // Hide the claim button after claiming
+    updateStats(); // Update the stats
+});
+
+// Initialize the YouTube Player API
+const scriptTag = document.createElement('script');
+scriptTag.src = "https://www.youtube.com/iframe_api";
+document.body.appendChild(scriptTag);
+
+
+    function updateStats() {
+        document.getElementById('hunger').textContent = hunger;
+        document.getElementById('cleanliness').textContent = cleanliness;
+        document.getElementById('happiness').textContent = happiness;
+        document.getElementById('coins').textContent = coins;
+        document.getElementById('apples').textContent = apples;
+        document.getElementById('level').textContent = level;
+        document.getElementById('golden-apples').innerText = `Golden Apples: ${goldenApples}`; // Update golden apples
+    document.getElementById('deposited-coins').textContent = depositedCoins; 
+    updateInventory(); // Update inventory slots
+
+        if (hunger < 10 || cleanliness < 10 || happiness < 10) {
+            document.getElementById('character').style.backgroundImage = "url('Picsart_25-01-10_00-23-56-807.png')";
+        } else {
+            document.getElementById('character').style.backgroundImage = "url('dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png')";
+        }
+    }
+
+    document.getElementById('feed').addEventListener('click', () => {
+        if (apples > 0) {
+            apples--;
+            hunger += 10;
+            if (hunger > 100) hunger = 100;
+            level++;
+            updateStats();
+        } else {
+            alert('You have no apples!');
+        }
+    });
+
+    document.getElementById('shower').addEventListener('click', () => {
+        cleanliness += 20;
+        if (cleanliness > 100) cleanliness = 100;
+        updateStats();
+    });
+
+    document.getElementById('open-chest').addEventListener('click', () => {
+        if (coins >= 10) {
+            coins -= 10;
+            const reward = Math.floor(Math.random() * 11) + 10;
+            apples += reward;
+            alert(`You received ${reward} apples!`);
+            updateStats();
+        } else {
+            alert('Not enough coins!');
+        }
+    });
+
+    document.getElementById('toggle-menu').addEventListener('click', () => {
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    });
+
+  
+
+    document.getElementById('save-progress').addEventListener('click', () => {
+    showStatus('');
+    setTimeout(() => {
+        localStorage.setItem('HGPRO', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins, quests}));
+        alert('Progress saved!');
+        hideStatus();
+    }, 2000); // Optional delay for better UX
+});
+
+function autoSave() {
+    showStatus('');
+    setTimeout(() => {
+        localStorage.setItem('HGPRO', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins, quests }));
+        console.log('Game auto-saved!'); // Replace with alert or other feedback if needed
+        hideStatus();
+    }, 2000); // Optional delay for better UX
+}
+
+
+// Function to start auto-saving at regular intervals
+function startAutoSave() {
+    if (autoSaveEnabled) {
+        setInterval(autoSave, 5000); // Save every 5 seconds (can adjust the time)
+    }
+}
+
+function saveProgress() {
+    const progress = {
+        hunger,
+        cleanliness,
+        happiness,
+        coins,
+        apples,
+        goldenApples, // Add golden apples
+        level,
+        depositedCoins,
+        quests
+    };
+    localStorage.setItem('HGPRO', JSON.stringify(progress));
+}
+
+
+document.getElementById('toggle-autosave').addEventListener('click', () => {
+    autoSaveEnabled = !autoSaveEnabled; // Toggle the state of auto-save
+    alert(`Auto-save is now ${autoSaveEnabled ? 'enabled' : 'disabled'}`);
+    startAutoSave(); // Start auto-saving if it's enabled
+    document.getElementById('toggle-autosave').textContent = (`Auto-save is now ${autoSaveEnabled ? 'enabled' : 'disabled'}`);
+});
+
+window.onload = () => {
+    const savedData = JSON.parse(localStorage.getItem('HGPRO'));
+    if (savedData) {
+        hunger = savedData.hunger;
+        cleanliness = savedData.cleanliness;
+        happiness = savedData.happiness;
+        coins = savedData.coins;
+        apples = savedData.apples;
+        goldenApples = savedData.goldenApples || 0;
+        level = savedData.level;
+        depositedCoins = savedData.depositedCoins || 0;
+        quests = savedData.quests || quests;
+
+        // Apply the completed quest class to completed quests
+        quests.forEach(quest => {
+            if (quest.completed) {
+                document.getElementById(`quest-${quest.id}`).classList.add('completed-quest');
+            }
+        });
+
+        updateStats();
+    }
+};
+
+
+
+        
+
+    setInterval(() => {
+        coins += 90;
+        updateStats();
+    }, 60000); 
+
+    setInterval(() => {
+    if (!infiniteStates) {  // Only decrement if infiniteStates is false
+        hunger--;
+        cleanliness--;
+        happiness--;
+        if (hunger < 0) hunger = 0;
+        if (cleanliness < 0) cleanliness = 0;
+        if (happiness < 0) happiness = 0;
+        updateStats();  // Call the updateStats function to reflect the changes
+    }
+}, 5000);  // Adjust this interval as per your game needs
+
+    document.getElementById('reset-data').addEventListener('click', () => {
+        const confirmReset = confirm('Are you sure you want to reset all your data?');
+        if (confirmReset) {
+            hunger = 100;
+            cleanliness = 100;
+            happiness = 100;
+            coins = 0;
+            apples = 0;
+            infiniteStates = false;
+            level = 1;
+            localStorage.removeItem('HGPRO');
+            updateStats();
+            alert('Data reset successfully!');
+        }
+    });
+
+
+
+    document.getElementById('earn-apples').addEventListener('click', () => {
+        const earnApplesButton = document.getElementById('earn-apples');
+        if (!earnApplesButton.disabled) {
+            apples++;
+            updateStats();
+            earnApplesButton.disabled = true;
+            earnApplesButton.textContent = "Cooldown (30s)";
+            let cooldownTime = 30;
+
+            const cooldownInterval = setInterval(() => {
+                cooldownTime--;
+                earnApplesButton.textContent = `Cooldown (${cooldownTime}s)`;
+                if (cooldownTime <= 0) {
+                    clearInterval(cooldownInterval);
+                    earnApplesButton.disabled = false;
+                    earnApplesButton.textContent = "Earn Apples";
+                }
+            }, 1000);
+        }
+    });
+
+    const showPhoneButton = document.getElementById('show-phone');
+    const closePhoneButton = document.getElementById('close-phone');
+    const phone = document.getElementById('phone');
+
+    showPhoneButton.addEventListener('click', () => {
+        phone.style.display = 'flex';
+    });
+
+    closePhoneButton.addEventListener('click', () => {
+        phone.style.display = 'none';
+    });
+
+    let patCooldown = false;
+
+    const character = document.getElementById('character');
+
+    character.addEventListener('click', () => {
+        if (!patCooldown) {
+            patCooldown = true;
+            happiness += 10;
+            if (happiness > 100) happiness = 100;
+            updateStats();
+            character.style.transform = "translateY(-20px)";
+            setTimeout(() => {
+                character.style.transform = "translateY(0)";
+            }, 200);
+            new Audio('Yay - Sound Effect.mp3').play();
+            setTimeout(() => {
+                patCooldown = false;
+            }, 1000);
+        }
+    });
+
+    // Handle the Show Background Button click
+document.getElementById('show-background').addEventListener('click', () => {
+    const backgroundMenu = document.getElementById('background-menu');
+    backgroundMenu.style.display = backgroundMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+// Handle background changes
+document.getElementById('background-1').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('original-232adf446d5619c49c4ffb6247751762.webp')";
+    document.getElementById('background-menu').style.display = 'none';
+});
+
+document.getElementById('background-2').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('1oh3prd5lsr71.webp')";
+    document.getElementById('background-menu').style.display = 'none';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+});
+
+document.getElementById('background-3').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('ai-generated-ai-generative-outdoor-nature-adventure-forest-walk-path-road-adventures-background-graphic-art-photo.jpg')";
+    document.getElementById('background-menu').style.display = 'none';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+});
+
+document.getElementById('background-4').addEventListener('click', () => {
+    document.body.style.backgroundImage = "url('white-cement-wall-texture-backgrounds_707519-24233.avif')";
+    document.getElementById('background-menu').style.display = 'none';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+});
+
+// Handle the Reset Background Button click
+document.getElementById('reset-background').addEventListener('click', () => {
+    document.body.style.backgroundImage = ''; // Reset the background image
+    document.getElementById('background-menu').style.display = 'none'; // Hide the background menu
+});
+
+document.getElementById('close-menu').addEventListener('click', () => {
+    document.getElementById('menu').style.display = 'none';
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleShopMenu = document.getElementById("toggleShopMenu");
+    const shopMenu = document.getElementById("shopMenu");
+    const buyBoostPotion = document.getElementById("buyBoostPotion");
+    const shopFeedback = document.getElementById("shopFeedback");
+
+    let boostCooldown = false;
+
+    // Toggle shop menu visibility
+    toggleShopMenu.addEventListener("click", () => {
+        shopMenu.style.display = shopMenu.style.display === "none" ? "block" : "none";
+    });
+
+    // Purchase boost potion
+    buyBoostPotion.addEventListener("click", () => {
+        if (boostCooldown) {
+            shopFeedback.textContent = "Potion is on cooldown. Please wait!";
+            return;
+        }
+
+        if (coins >= 30) { // Assuming 'coins' is a global variable in your existing code
+            coins -= 30;
+            shopFeedback.textContent = "Boost potion activated! All stats increased.";
+            boostCooldown = true;
+
+            // Directly update game stats (replace these with your actual game variables)
+            hunger = Math.min(hunger + 30, 100); // Replace 'hunger' with your variable
+            cleanliness = Math.min(cleanliness + 30, 100); // Replace 'cleanliness' with your variable
+            happiness = Math.min(happiness + 30, 100); // Replace 'happiness' with your variable
+
+            // Optionally log updated values for debugging
+            console.log("Updated stats: ", { hunger, cleanliness, happiness });
+
+            // Start cooldown timer
+            setTimeout(() => {
+                boostCooldown = false;
+                shopFeedback.textContent = "";
+            }, 2 * 60 * 1000); // 2 minutes cooldown
+        } else {
+            shopFeedback.textContent = "Not enough coins to buy the potion.";
+        }
+    });
+});
+
+
+document.getElementById('close-men1').addEventListener('click', () => {
+    document.getElementById('shopMenu').style.display = 'none';
+});
+
+
+document.getElementById('infinite-states-button').addEventListener('click', () => {
+    if (coins >= 900000 && !infiniteStates) {
+        coins -= 900000;
+        infiniteStates = true;
+        alert('Infinite states enabled! Stats will no longer decrease.');
+        updateStats();  // Update stats to reflect the change in state
+    } else {
+        alert('You dont have enough coins!');
+    }
+});
+
+// Get the button and the menu
+const toggleMenuButton = document.getElementById('NTC');
+const customMenu = document.getElementById('NTCM');
+
+// Add the event listener to toggle the menu visibility
+toggleMenuButton.addEventListener('click', () => {
+    // Toggle the menu's display between 'none' and 'block'
+    if (customMenu.style.display === 'none' || customMenu.style.display === '') {
+        customMenu.style.display = 'block';
+    } else {
+        customMenu.style.display = 'none';
+    }
+});
+
+// Handle "Buy 1000 Apples (500 Coins)" Button
+document.getElementById('buyApples').addEventListener('click', () => {
+    if (coins >= 2000) {
+        coins -= 2000; // Deduct 500 coins
+        apples += 5000; // Add 1000 apples
+        updateStats(); // Update the stats on the screen
+        document.getElementById('shopFeedback').textContent = 'Successfully bought 5000 apples!';
+        document.getElementById('shopFeedback').style.color = 'green';
+    } else {
+        document.getElementById('shopFeedback').textContent = 'Not enough coins to buy 5000 apples.';
+        document.getElementById('shopFeedback').style.color = 'red';
+    }
+});
+
+document.getElementById('fuse-menu-button').addEventListener('click', () => {
+    document.getElementById('fuse-menu').style.display = 'block';
+});
+
+document.getElementById('close-fuse-menu').addEventListener('click', () => {
+    document.getElementById('fuse-menu').style.display = 'none';
+});
+
+document.getElementById('fuse-apples-button').addEventListener('click', () => {
+    if (apples >= 10 && coins >= 30) {
+        apples -= 10; // Deduct 10 apples
+        coins -= 30; // Deduct 30 coins
+        goldenApples += 1; // Add 1 golden apple
+        updateStats(); // Update the UI
+        alert('Successfully fused 10 apples into 1 golden apple!');
+    } else if (apples < 10) {
+        alert('You need at least 10 apples to fuse!');
+    } else if (coins < 30) {
+        alert('You need at least 30 coins to fuse!');
+    }
+    document.getElementById('fuse-menu').style.display = 'none'; // Close the menu
+});
+
+function useGoldenApple() {
+    if (goldenApples > 0) {
+        goldenApples -= 1;
+        hunger = 100; // Set hunger to 100%
+        updateStats();
+        alert('You used a golden apple! Hunger is now full!');
+    } else {
+        alert('No golden apples left!');
+    }
+}
+
+document.getElementById('use-golden-apple').addEventListener('click', useGoldenApple);
+
+// Function to show and hide the status indicator
+function showStatus(message) {
+    const indicator = document.getElementById('status-indicator');
+    indicator.textContent = message; // Set the message (e.g., "Saving..." or "Loading...")
+    indicator.style.display = 'block';
+}
+
+function hideStatus() {
+    const indicator = document.getElementById('status-indicator');
+    indicator.style.display = 'none';
+}
+
+// Rewards for each day
+const dailyRewards = [
+    "100 coins",
+    "5 apple",
+    "190 coins",
+    "10 apples",
+    "280 coins",
+    "1 golden apple",
+    "370 coins",
+    "20 apples",
+    "500 coins",
+    "2 golden apples",
+    "1000 coins",
+    "70 apples",
+];
+
+let lastLoginDate = localStorage.getItem('lastLoginDate');
+let currentStreak = parseInt(localStorage.getItem('currentStreak'), 10) || 0;
+
+function openDailyLoginMenu() {
+    const dailyMenu = document.getElementById('daily-login-menu');
+    const dailyInfo = document.getElementById('daily-login-info');
+
+    dailyMenu.style.display = 'block';
+
+    // Check if the player has already claimed today's reward
+    const today = new Date().toDateString();
+    if (lastLoginDate === today) {
+        dailyInfo.textContent = `You have already claimed today's reward: ${dailyRewards[currentStreak - 1]}`;
+    } else {
+        const reward = dailyRewards[currentStreak] || "No more rewards! Come back tomorrow.";
+        dailyInfo.textContent = `Today's reward: ${reward}`;
+    }
+}
+
+function closeDailyLoginMenu() {
+    const dailyMenu = document.getElementById('daily-login-menu');
+    dailyMenu.style.display = 'none';
+}
+
+function claimDailyReward() {
+    const today = new Date().toDateString();
+
+    // Check if the reward for today is already claimed
+    if (lastLoginDate === today) {
+        alert("You've already claimed today's reward!");
+        return;
+    }
+
+    // Update streak and save the new last login date
+    if (lastLoginDate && new Date(lastLoginDate).getDate() === new Date().getDate() - 1) {
+        currentStreak++;
+    } else {
+        currentStreak = 1; // Reset streak if the player missed a day
+        alert('Your streak broke because you missed a day!')
+    }
+
+    lastLoginDate = today;
+    localStorage.setItem('lastLoginDate', lastLoginDate);
+    localStorage.setItem('currentStreak', currentStreak);
+
+    // Grant reward
+    const reward = dailyRewards[currentStreak - 1];
+    if (reward) {
+        alert(`You claimed: ${reward}`);
+
+        // Handle specific rewards (e.g., coins, apples, golden apples)
+        if (reward.includes('coins')) {
+            coins += parseInt(reward.split(' ')[0], 10);
+        } else if (reward.includes('apple')) {
+            if (reward.includes('golden')) {
+                goldenApples++;
+            } else {
+                apples += parseInt(reward.split(' ')[0], 10);
+            }
+        }
+
+        updateStats(); // Update the stats display
+    } else {
+        alert("No more rewards left! Come back tomorrow.");
+    }
+
+    // Update the menu display
+    openDailyLoginMenu();
+}
+
+// Event Listeners
+document.getElementById('daily-login-button').addEventListener('click', openDailyLoginMenu);
+document.getElementById('close-daily-menu').addEventListener('click', closeDailyLoginMenu);
+document.getElementById('claim-daily-reward').addEventListener('click', claimDailyReward);
+
+// Add event listener for the golden chest button
+document.getElementById('open-golden-chest').addEventListener('click', () => {
+    if (coins >= 400) { // Check if the player has enough coins
+        coins -= 400; // Deduct 100 coins
+        const reward = Math.floor(Math.random() * 2) === 0 ? 
+            Math.floor(Math.random() * 501) + 500 : // Random coins between 50 and 100
+            Math.floor(Math.random() * 31) + 30; // Random apples between 5 and 10
+        
+        // Update the reward text in the existing 'shopFeedback' element
+        const rewardText = document.getElementById('shopFeedback');
+        rewardText.style.display = 'block';
+        
+        if (reward >= 50) { // If reward is coins
+            coins += reward;
+            rewardText.textContent = `You received ${reward} coins!`;
+        } else { // If reward is apples
+            apples += reward;
+            rewardText.textContent = `You received ${reward} apples!`;
+        }
+        
+        // Hide the reward text after 10 seconds
+        setTimeout(() => {
+            rewardText.style.display = 'none';
+        }, 10000);
+        
+        updateStats(); // Update stats
+    } else {
+        alert('Not enough coins! You need 400 coins to open the golden chest.');
+    }
+});
+
+function copyLink() {
+    const url = window.location.href;  // Gets the current URL of the webpage
+    navigator.clipboard.writeText(url).then(() => {
+      alert('Link copied to clipboard!');  // Notify the user
+    }).catch(err => {
+      alert('Failed to copy the link!');
+    });
+  }
+
+  function changePhoneTheme(theme) {
+  const phone = document.getElementById('phone');
+  // Reset the class of the phone container before applying the new theme
+  phone.classList.remove('classic', 'retro', 'futuristic');
+  // Apply the selected theme
+  phone.classList.add(theme);
+}
+
+// Function to disable all page actions except the Close AFK Zone button
+function disablePage() {
+    // Disable all interactive elements (except the Close AFK Zone button)
+    let elements = document.querySelectorAll("button, a, input, select, textarea, div");
+    elements.forEach(element => {
+        if (element.id !== "closeAfkButton") {
+            element.setAttribute("disabled", "true");
+        }
+    });
+}
+
+// Function to enable all page actions again
+function enablePage() {
+    // Enable all interactive elements
+    let elements = document.querySelectorAll("button, a, input, select, textarea, div");
+    elements.forEach(element => {
+        if (element.id !== "closeAfkButton") {
+            element.removeAttribute("disabled");
+        }
+    });
+}
+
+// Handle entering the AFK zone
+document.getElementById('afkButton').addEventListener('click', function() {
+    if (!isInAfkZone) {
+        isInAfkZone = true;
+
+        // Disable all actions on the page except the Close AFK Zone button
+        disablePage();
+
+        // Show the Close AFK Zone button
+        document.getElementById('closeAfkButton').style.display = "block";
+
+        // Start giving coins every second (without the need for clicking)
+        afkInterval = setInterval(function() {
+            coins += 2; // Add 2 coins every second automatically
+            console.log("Coins: " + coins); // For testing, check the coin count in the console
+        }, 1000);
+    }
+});
+
+// Handle closing the AFK zone
+document.getElementById('closeAfkButton').addEventListener('click', function() {
+    if (isInAfkZone) {
+        // Stop the coin interval
+        clearInterval(afkInterval);
+
+        // Enable page actions again
+        enablePage();
+
+        // Hide the Close AFK Zone button and reset the state
+        document.getElementById('closeAfkButton').style.display = "none";
+        isInAfkZone = false;
+    }
+});
+
+// Rewards for the wheel
+const rewards = [
+        { name: "50 Coins", value: 50 },
+        { name: "100 Coins", value: 100 },
+        { name: "Spin Again", value: "spinAgain" },
+        { name: "250 Coins", value: 250 },
+        { name: "500 Coins", value: 500 },
+    ];
+
+    const spinButton = document.getElementById("spinButton");
+    const buyLuckPotionButton = document.getElementById("buyLuckPotion");
+    const luckPotionDisplay = document.getElementById("luckPotionDisplay");
+    const wheel = document.getElementById("wheel");
+
+    function updateUI() {
+        document.getElementById("coins").textContent = coins; // Update coin count
+        luckPotionDisplay.textContent = `Luck Potions: ${luckPotions}`; // Update potion count
+    }
+
+    // Get a random reward with optional luck boost
+    function getReward() {
+        let reward = rewards[Math.floor(Math.random() * rewards.length)];
+
+        // Apply luck potion effect
+        if (luckPotions > 0) {
+            const randomChance = Math.random();
+            if (randomChance < 0.5) {
+                reward = rewards.find(r => r.value === "spinAgain") || reward;
+            }
+            luckPotions--;
+        }
+        return reward;
+    }
+
+    // Spin the wheel
+    spinButton.addEventListener("click", function () {
+        if (isSpinning) return; // Prevent multiple spins
+
+        if (dailySpinAvailable) {
+            dailySpinAvailable = false; // First spin is free
+        } else if (coins >= 50) {
+            coins -= 50; // Deduct coins for subsequent spins
+        } else {
+            alert("Not enough coins to spin the wheel!");
+            return;
+        }
+
+        isSpinning = true;
+        const reward = getReward();
+        const rewardIndex = rewards.indexOf(reward);
+
+        // Calculate the end rotation angle
+        const sectorAngle = 360 / rewards.length;
+        const randomExtraSpins = Math.floor(Math.random() * 3 + 5); // Random 5-7 full spins
+        const targetAngle = randomExtraSpins * 360 + rewardIndex * sectorAngle + sectorAngle / 2;
+
+        // Spin the wheel
+        wheel.style.transition = "transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67)";
+        wheel.style.transform = `rotate(${targetAngle}deg)`;
+
+        setTimeout(() => {
+            isSpinning = false;
+
+            // Handle reward
+            if (reward.value === "spinAgain") {
+                alert("You won: nothing");
+            } else {
+                coins += reward.value;
+                alert(`You won: ${reward.name}`);
+            }
+            updateUI();
+
+            // Reset wheel position for the next spin
+            wheel.style.transition = "none";
+            wheel.style.transform = `rotate(${rewardIndex * sectorAngle + sectorAngle / 2}deg)`;
+        }, 5000); // Wait for the spin to complete
+    });
+
+    // Buy luck potion
+    buyLuckPotionButton.addEventListener("click", function () {
+        if (coins >= 100) {
+            coins -= 100;
+            luckPotions++;
+            alert("You bought a Luck Potion!");
+            updateUI();
+        } else {
+            alert("Not enough coins to buy a Luck Potion!");
+        }
+    });
+
+    // Reset the daily free spin at midnight
+    setInterval(() => {
+        const now = new Date();
+        if (now.getHours() === 0 && now.getMinutes() === 0) {
+            dailySpinAvailable = true;
+        }
+    }, 60000); // Check every minute
+
+    // Initial UI update
+    updateUI();
+
+    document.getElementById('close-men4').addEventListener('click', () => {
+    document.getElementById('wheel').style.display = 'none';
+});
+
+document.getElementById('close-men4').addEventListener('click', () => {
+    document.getElementById('wheelContainer').style.display = 'none';
+});
+
+document.getElementById('show-menu1').addEventListener('click', () => {
+    document.getElementById('wheelContainer').style.display = 'flex';
+});
+
+document.getElementById('show-menu1').addEventListener('click', () => {
+    document.getElementById('wheel').style.display = 'flex';
+});
+
+
+// Function to check if the lucky box should appear
+function checkLuckyBox() {
+  const luckyBox = document.getElementById("lucky-box");
+  const today = new Date().toDateString();
+
+  if (lastLuckyBoxClaim === today) {
+    luckyBox.style.display = "none"; // Hide if already claimed today
+  } else {
+    luckyBox.style.display = "block"; // Show if not yet claimed
+  }
+}
+
+// Function to handle lucky box rewards
+function claimLuckyBox() {
+  const rewards = [
+    { type: "coins", amount: 50 },
+    { type: "coins", amount: 100 },
+    { type: "apples", amount: 3 },
+    { type: "apples", amount: 5 },
+    { type: "luckPotion", amount: 1 },
+  ];
+  const randomReward = rewards[Math.floor(Math.random() * rewards.length)];
+
+  // Grant reward
+  switch (randomReward.type) {
+    case "coins":
+      coins += randomReward.amount;
+      localStorage.setItem("coins", coins);
+      alert(`You received ${randomReward.amount} coins!`);
+      break;
+    case "apples":
+      apples += randomReward.amount;
+      localStorage.setItem("apples", apples);
+      alert(`You received ${randomReward.amount} apples!`);
+      break;
+    case "luckPotion":
+      luckPotions += randomReward.amount;
+      localStorage.setItem("luckPotions", luckPotions);
+      alert(`You received ${randomReward.amount} Luck Potion(s)!`);
+      break;
+  }
+
+  // Update last claim date and hide the box
+  lastLuckyBoxClaim = new Date().toDateString();
+  localStorage.setItem("lastLuckyBoxClaim", lastLuckyBoxClaim);
+  checkLuckyBox();
+}
+
+// Add event listener for the lucky box
+document.getElementById("lucky-box").addEventListener("click", claimLuckyBox);
+
+// Check lucky box status on page load
+checkLuckyBox();
+
+
+// Event listener for toggle deposit menu button
+document.getElementById('toggle-deposit-menu').addEventListener('click', () => {
+    const depositMenu = document.getElementById('deposit-menu');
+    depositMenu.style.display = depositMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+// Event listener for close deposit menu button
+document.getElementById('close-deposit-menu').addEventListener('click', () => {
+    document.getElementById('deposit-menu').style.display = 'none';
+});
+
+// Event listener for deposit button
+document.getElementById('deposit-coins').addEventListener('click', () => {
+    if (coins > 0) {
+        const depositAmount = prompt('How many coins would you like to deposit?', '0');
+        const amount = parseInt(depositAmount);
+
+        if (amount > 0 && amount <= coins) {
+            coins -= amount;
+            depositedCoins += amount;
+            updateStats();
+        } else {
+            alert('Invalid amount. Make sure you have enough coins to deposit.');
+        }
+    } else {
+        alert('You have no coins to deposit!');
+    }
+});
+
+// Event listener for withdraw button
+document.getElementById('withdraw-coins').addEventListener('click', () => {
+    if (depositedCoins > 0) {
+        const withdrawAmount = prompt('How many coins would you like to withdraw?', '0');
+        const amount = parseInt(withdrawAmount);
+
+        if (amount > 0 && amount <= depositedCoins) {
+            coins += amount;
+            depositedCoins -= amount;
+            updateStats();
+        } else {
+            alert('Invalid amount. Make sure you have enough coins to withdraw.');
+        }
+    } else {
+        alert('You have no coins to withdraw!');
+    }
+});
+
+document.getElementById('play-scooter-game').addEventListener('click', () => {
+    document.getElementById('scooter-game-menu').style.display = 'block';
+    startScooterGame();
+});
+
+document.getElementById('close-scooter-game').addEventListener('click', () => {
+    document.getElementById('scooter-game-menu').style.display = 'none';
+    stopScooterGame();
+});
+
+document.getElementById('play-scooter-game').addEventListener('click', () => {
+    document.getElementById('scooter-game-menu').style.display = 'block';
+    startScooterGame();
+});
+
+document.getElementById('close-scooter-game').addEventListener('click', () => {
+    stopScooterGame();
+    document.getElementById('scooter-game-menu').style.display = 'none';
+});
+
+function startScooterGame() {
+    const canvas = document.getElementById('scooter-game-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas dimensions based on screen size
+    if (window.innerWidth <= 600) {
+        canvas.width = window.innerWidth - 40; // 20px padding on each side
+        canvas.height = (canvas.width / 2); // Maintain aspect ratio (16:9)
+    } else {
+        canvas.width = 800;
+        canvas.height = 400;
+    }
+
+    scooterGame = { canvas, ctx, width: canvas.width, height: canvas.height, speed: 5, playing: true };
+    scooterPlayer = { x: 50, y: scooterGame.height - 100, width: 50, height: 50, vy: 0, jumping: false };
+    scooterObstacles = [];
+    scooterInterval = setInterval(updateScooterGame, 20);
+
+    document.addEventListener('keydown', handleJump);
+    canvas.addEventListener('click', handleJump); // For mouse clicks
+    canvas.addEventListener('touchstart', handleJump); // For touch events
+}
+
+function stopScooterGame() {
+    clearInterval(scooterInterval);
+    document.removeEventListener('keydown', handleJump);
+    const canvas = document.getElementById('scooter-game-canvas');
+    canvas.removeEventListener('click', handleJump); // Remove mouse click listener
+    canvas.removeEventListener('touchstart', handleJump); // Remove touch event listener
+    scooterGame.playing = false;
+    document.getElementById('scooter-game-menu').style.display = 'none';
+}
+
+function updateScooterGame() {
+    const { canvas, ctx, width, height, speed } = scooterGame;
+    ctx.clearRect(0, 0, width, height);
+
+    // Update player
+    scooterPlayer.y += scooterPlayer.vy;
+    scooterPlayer.vy += 1;
+    if (scooterPlayer.y >= height - scooterPlayer.height) {
+        scooterPlayer.y = height - scooterPlayer.height;
+        scooterPlayer.jumping = false;
+    }
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(scooterPlayer.x, scooterPlayer.y, scooterPlayer.width, scooterPlayer.height);
+
+    // Update obstacles
+    if (Math.random() < 0.02) {
+        scooterObstacles.push({ x: width, y: height - 50, width: 50, height: 50 });
+    }
+    ctx.fillStyle = 'red';
+    for (let i = 0; i < scooterObstacles.length; i++) {
+        const obs = scooterObstacles[i];
+        obs.x -= speed;
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        if (obs.x < 0) scooterObstacles.splice(i, 1);
+        if (obs.x < scooterPlayer.x + scooterPlayer.width && obs.x + obs.width > scooterPlayer.x && obs.y < scooterPlayer.y + scooterPlayer.height && obs.y + obs.height > scooterPlayer.y) {
+            stopScooterGame();
+        }
+    }
+}
+
+function handleJump(e) {
+    if ((e.type === 'keydown' && e.code !== 'Space') || (e.type === 'touchstart' && !scooterGame.playing)) return;
+    if (!scooterPlayer.jumping) {
+        scooterPlayer.vy = -15;
+        scooterPlayer.jumping = true;
+        coins += 5; // Give 5 coins for each jump
+        updateStats();
+    }
+}
+
+
+
+function updateScooterGame() {
+    const { canvas, ctx, width, height, speed } = scooterGame;
+    ctx.clearRect(0, 0, width, height);
+
+    // Update player
+    scooterPlayer.y += scooterPlayer.vy;
+    scooterPlayer.vy += 1;
+    if (scooterPlayer.y >= 300) {
+        scooterPlayer.y = 300;
+        scooterPlayer.jumping = false;
+    }
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(scooterPlayer.x, scooterPlayer.y, scooterPlayer.width, scooterPlayer.height);
+
+    // Update obstacles
+    if (Math.random() < 0.02) {
+        scooterObstacles.push({ x: width, y: 300, width: 50, height: 50 });
+    }
+    ctx.fillStyle = 'red';
+    for (let i = 0; i < scooterObstacles.length; i++) {
+        const obs = scooterObstacles[i];
+        obs.x -= speed;
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        if (obs.x < 0) scooterObstacles.splice(i, 1);
+        if (obs.x < scooterPlayer.x + scooterPlayer.width && obs.x + obs.width > scooterPlayer.x && obs.y < scooterPlayer.y + scooterPlayer.height && obs.y + obs.height > scooterPlayer.y) {
+            stopScooterGame();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+document.getElementById('toggle-dark-mode').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const elements = document.querySelectorAll('button, .menu, .background-menu');
+    elements.forEach(element => {
+        element.classList.toggle('dark-mode');
+    });
+});
+
+function updateInventory() {
+    // Clear current inventory slots
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        slot.innerHTML = ''; // Clear slot
+        slot.removeEventListener('click', handleAppleClick); // Remove any existing click listeners
+        slot.removeEventListener('click', handleGoldenAppleClick);
+    }
+
+    // Fill slots with apples and golden apples
+    let appleCount = apples;
+    let goldenAppleCount = goldenApples;
+
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+
+        if (goldenAppleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'images.jpg'; // Path to your golden apple image
+            img.alt = 'Golden Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleGoldenAppleClick); // Add click event listener
+            goldenAppleCount--;
+        } else if (appleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'lovepik-apple-png-image_401302520_wh1200.png'; // Path to your apple image
+            img.alt = 'Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleAppleClick); // Add click event listener
+            appleCount--;
+        }
+    }
+}
+
+// Event handler for apple click
+function handleAppleClick() {
+    if (apples > 0) {
+        apples--;
+        hunger += 10;
+        if (hunger > 100) hunger = 100;
+        level++;
+        updateStats();
+    } else {
+        alert('You have no apples!');
+    }
+}
+
+// Event handler for golden apple click
+function handleGoldenAppleClick() {
+    if (goldenApples > 0) {
+        goldenApples--;
+        hunger = 100; // Restore hunger to 100%
+        updateStats();
+    } else {
+        alert('You have no golden apples!');
+    }
+}
+
+// No need for draggable functionality anymore, so remove related functions
+
+document.getElementById('toggle-inventory').addEventListener('click', () => {
+    const inventory = document.getElementById('inventory');
+    const feedButton = document.getElementById('feed');
+    if (inventory.style.display === 'none' || inventory.style.display === '') {
+        inventory.style.display = 'flex';
+        feedButton.style.display = 'none';
+    } else {
+        inventory.style.display = 'none';
+        feedButton.style.display = 'block';
+    }
+});
+
+function updateInventory() {
+    // Clear current inventory slots
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        slot.innerHTML = ''; // Clear slot
+        slot.removeEventListener('click', handleAppleClick); // Remove any existing click listeners
+        slot.removeEventListener('click', handleGoldenAppleClick);
+    }
+
+    // Fill slots with apples and golden apples
+    let appleCount = apples;
+    let goldenAppleCount = goldenApples;
+
+    for (let i = 1; i <= 6; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+
+        if (goldenAppleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'images.jpg'; // Path to your golden apple image
+            img.alt = 'Golden Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleGoldenAppleClick); // Add click event listener
+            goldenAppleCount--;
+        } else if (appleCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'lovepik-apple-png-image_401302520_wh1200.png'; // Path to your apple image
+            img.alt = 'Apple';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleAppleClick); // Add click event listener
+            appleCount--;
+        }
+    }
+}
+
+// Event handler for apple click
+function handleAppleClick() {
+    if (apples > 0) {
+        apples--;
+        hunger += 10;
+        if (hunger > 100) hunger = 100;
+        level++;
+        updateStats();
+    } else {
+        alert('You have no apples!');
+    }
+}
+
+// Event handler for golden apple click
+function handleGoldenAppleClick() {
+    if (goldenApples > 0) {
+        goldenApples--;
+        hunger = 100; // Restore hunger to 100%
+        updateStats();
+    } else {
+        alert('You have no golden apples!');
+    }
+}
+
+
+
+
+
+
+function handleAppleClick() {
+    if (apples > 0) {
+        apples--;
+        hunger += 10;
+        if (hunger > 100) hunger = 100;
+        level++;
+        updateStats();
+    } else {
+        alert('You have no apples!');
+    }
+}
+
+function handleGoldenAppleClick() {
+    if (goldenApples > 0) {
+        goldenApples--;
+        hunger = 100; // Restore hunger to 100%
+        updateStats();
+    } else {
+        alert('You have no golden apples!');
+    }
+}
+
+let quests = [
+    { id: 'feedHatchling', description: 'Feed the hatchling 5 times', requirement: 5, progress: 0, reward: 100, completed: false },
+    { id: 'buyFromShop', description: 'Buy a boost potion', requirement: 1, progress: 0, reward: 200, completed: false },
+    { id: 'fuseApples', description: 'Fuse 10 apples into a golden apple', requirement: 10, progress: 0, reward: 200, completed: false },
+    { id: 'buyGoldenChest', description: 'Buy a golden chest', requirement: 1, progress: 0, reward: 700, completed: false }
+];
+
+function updateQuestProgress(questId, increment = 1) {
+    let quest = quests.find(q => q.id === questId);
+    if (!quest.completed) {
+        quest.progress += increment;
+        if (quest.progress >= quest.requirement) {
+            quest.completed = true;
+            coins += quest.reward;
+            alert(`Quest Completed: ${quest.description}\nReward: ${quest.reward} coins`);
+            document.getElementById(`quest-${questId}`).classList.add('completed-quest'); // Add the completed quest class
+            updateStats();
+        }
+    }
+    saveProgress();
+}
+
+
+document.getElementById('feed').addEventListener('click', () => {
+    // Existing feeding logic
+    updateQuestProgress('feedHatchling');
+});
+
+document.getElementById('buyBoostPotion').addEventListener('click', () => {
+    // Existing shop logic
+    updateQuestProgress('buyFromShop');
+});
+
+document.getElementById('fuse-apples-button').addEventListener('click', () => {
+    // Existing fusing logic
+    updateQuestProgress('fuseApples', 10); // Increment by 10 for fusing 10 apples
+});
+
+document.getElementById('open-golden-chest').addEventListener('click', () => {
+    // Existing chest logic
+    updateQuestProgress('buyGoldenChest');
+});
+
+document.getElementById('toggle-progress-menu').addEventListener('click', () => {
+    const progressMenu = document.getElementById('progress-menu');
+    progressMenu.style.display = progressMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+document.getElementById('close-progress-menu').addEventListener('click', () => {
+    document.getElementById('progress-menu').style.display = 'none';
+});
+
+function createUserLink() {
+    const username = document.getElementById('username').value;
+    const userLinksDiv = document.getElementById('user-links');
+    
+    if (username) {
+        let link;
+        switch (username.toLowerCase()) {
+            case 'user1':
+                link = 'user1.html'; 
+                break;
+            case 'user2':
+                link = 'user2.html';
+                break;
+            case 'user3':
+                link = 'user3.html';
+                break;
+            default:
+                alert('Invalid username. Please use user1, user2, or user3.');
+                return;
+        }
+        
+        const userLink = document.createElement('a');
+        userLink.href = link;
+        userLink.textContent = `Go to ${username}'`;
+        userLinksDiv.appendChild(userLink);
+        
+        // Clear the input field
+        document.getElementById('username').value = '';
+    } else {
+        alert('Please enter a username.');
+    }
+}
+
+
+
+
+
+</script>
+<p style="background: #B8E1FC;
+background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;" >V8 beta (prev version V7)</p>
+</body>
+</html>
