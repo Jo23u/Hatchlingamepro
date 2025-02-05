@@ -468,6 +468,136 @@ button.dark-mode {
     }
 }
 
+.welcome-menu {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: 2px solid #ccc;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+.welcome-menu h2 {
+    margin-top: 0;
+}
+
+.welcome-menu button {
+    margin: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.welcome-menu button:hover {
+    background-color: #45a049;
+    transition: transform 0.2s;
+    transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+.settings-menu {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border: 2px solid #ccc;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    text-align: center;
+}
+
+.settings-menu h2 {
+    margin-top: 0;
+}
+
+.settings-menu button {
+    margin: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.settings-menu button:hover {
+    background-color: #45a049;
+    transition: transform 0.2s;
+    transform: scale(1.1);
+}
+
+#vip-access {
+    background-color: gold;
+    color: black;
+}
+
+#vip-access:hover {
+    background-color: orange;
+    transition: transform 0.2s;
+    transform: scale(1.1);
+}
+
+#open-settings {
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#open-settings:hover {
+    background-color: #005f75;
+}
+
+.welcome-text {
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000;
+    display: block; /* Hidden by default */
+}
+
+.talk-menu {
+    display: none;
+    background: #ffffff;
+    border: 2px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 101;
+    text-align: center;
+}
+
+.talk-menu input {
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 80%;
+    box-sizing: border-box;
+}
 
 
 
@@ -498,6 +628,8 @@ button.dark-mode {
         <button id="save-progress">Save Progress</button>
         <button id="reset-data">Reset Data</button>
         <button id="show-phone">Show Phone</button>
+        <button id="command-jump">Jump</button>
+<button id="command-talk">Talk</button>
         <button id="show-background">Show Background</button>
         <button id="reset-background">Reset Background</button>
         <button id="toggleShopMenu">Shop</button>
@@ -509,6 +641,7 @@ button.dark-mode {
     <button id="toggle-inventory">Toggle Inventory</button>
     <button id="toggle-progress-menu">Show Progress</button>
     <button id="toggle-dark-mode">Toggle Dark Mode</button>
+    <button id="toggle-buttons">Toggle Buttons</button>
         <button id="NTC">Notice</button>
 
     </div>
@@ -655,10 +788,37 @@ button.dark-mode {
     </ul>
 </div>
 
+<div id="welcome-menu" class="welcome-menu">
+    <h2>Welcome to Talking Hatchling Pro!</h2>
+    <p>Enjoy your time in the game. Make sure to check out all the features!</p>
+    <br>
+    <div id="welcome-text" class="welcome-text">Current user: user3</div>
+    <button id="close-welcome-menu">Close</button>
+</div>
+
+<div id="settings-menu" class="settings-menu" style="display: none;">
+    <h2>Settings</h2>
+    <button id="mute-sounds">Mute All Sounds</button>
+    <div>
+        <p>Choose Background Color:</p>
+        <input type="color" id="background-color-picker" value="#f0f8ff">
+    </div>
+    <div>
+        <p>Choose Button Color:</p>
+        <input type="color" id="button-color-picker" value="#4caf50">
+    </div>
+    <button id="close-settings">Close Settings</button>
+</div>
+<button id="open-settings">Open Settings</button>
 
 
-    
-            
+
+<div id="talk-menu" class="talk-menu" style="display: none;">
+    <input type="text" id="talk-input" placeholder="Type something...">
+    <button id="submit-talk">Submit</button>
+    <button id="close-talk-menu">Close</button>
+</div>
+
             
 
 
@@ -835,10 +995,17 @@ window.onload = () => {
                 document.getElementById(`quest-${quest.id}`).classList.add('completed-quest');
             }
         });
+    
+
+        
 
         updateStats();
+
     }
+    document.getElementById('welcome-menu').style.display = 'block';
 };
+    
+
 
 
 
@@ -873,6 +1040,8 @@ window.onload = () => {
             level = 1;
             localStorage.removeItem('HASHK');
             updateStats();
+            quest.increment - 4
+            updateQuestProgress()
             alert('Data reset successfully!');
         }
     });
@@ -1917,6 +2086,111 @@ function createUserLink() {
     }
 }
 
+document.getElementById('toggle-buttons').addEventListener('click', () => {
+    const buttonsToToggle = [
+        document.getElementById('afkButton'),
+        document.getElementById('closeAfkButton'),
+        document.getElementById('toggle-deposit-menu'),
+        document.getElementById('play-scooter-game'),
+        document.getElementById('toggle-inventory'),
+        document.getElementById('toggle-progress-menu'),
+        document.getElementById('toggle-dark-mode'),
+        document.getElementById('NTC')
+    ];
+
+    buttonsToToggle.forEach(button => {
+        button.style.display = (button.style.display === 'none') ? 'block' : 'none';
+    });
+});
+
+// Close the welcome menu when the close button is clicked
+document.getElementById('close-welcome-menu').addEventListener('click', () => {
+    document.getElementById('welcome-menu').style.display = 'none';
+});
+
+document.getElementById('open-settings').addEventListener('click', () => {
+    document.getElementById('settings-menu').style.display = 'block';
+});
+
+document.getElementById('close-settings').addEventListener('click', () => {
+    document.getElementById('settings-menu').style.display = 'none';
+});
+
+document.getElementById('mute-sounds').addEventListener('click', () => {
+    const audioElements = document.getElementsByTagName('audio');
+    for (let i = 0; i < audioElements.length; i++) {
+        audioElements[i].muted = !audioElements[i].muted;
+    }
+    alert('All sounds have been muted/unmuted.');
+});
+
+document.getElementById('background-color-picker').addEventListener('change', (event) => {
+    document.body.style.backgroundColor = event.target.value;
+});
+
+document.getElementById('button-color-picker').addEventListener('change', (event) => {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        if (button.id !== 'vip-access') {
+            button.style.backgroundColor = event.target.value;
+        }
+    });
+});
+
+const allowedMessages = ["hello", "bye", "hi", "i love apples"];
+
+document.getElementById('command-jump').addEventListener('click', () => {
+    if (!patCooldown) {
+        patCooldown = true;
+        character.style.transform = "translateY(-20px)";
+        setTimeout(() => {
+            character.style.transform = "translateY(0)";
+            patCooldown = false;
+        }, 200);
+        new Audio('Yay - Sound Effect.mp3').play();
+    }
+});
+
+document.getElementById('command-talk').addEventListener('click', () => {
+    const talkMenu = document.getElementById('talk-menu');
+    talkMenu.style.display = 'block';
+});
+
+document.getElementById('submit-talk').addEventListener('click', () => {
+    const talkInput = document.getElementById('talk-input');
+    const message = talkInput.value.toLowerCase(); // Convert to lowercase to match allowed messages
+
+    if (allowedMessages.includes(message)) {
+        // Display the message above the character
+        const messageElement = document.createElement('div');
+        messageElement.textContent = message;
+        messageElement.style.position = 'absolute';
+        messageElement.style.top = '10px';
+        messageElement.style.left = '50%';
+        messageElement.style.transform = 'translateX(-50%)';
+        messageElement.style.backgroundColor = '#fff';
+        messageElement.style.border = '1px solid #ccc';
+        messageElement.style.padding = '5px';
+        messageElement.style.borderRadius = '5px';
+
+        document.body.appendChild(messageElement);
+
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+            document.body.removeChild(messageElement);
+        }, 3000);
+
+        // Clear the input and close the talk menu
+        talkInput.value = '';
+        document.getElementById('talk-menu').style.display = 'none';
+    } else {
+        alert('Please enter a valid message: "hello", "bye", "hi", or "I love apples".');
+    }
+});
+
+document.getElementById('close-talk-menu').addEventListener('click', () => {
+    document.getElementById('talk-menu').style.display = 'none';
+});
 
 
 
@@ -1926,6 +2200,6 @@ function createUserLink() {
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V8 beta (prev version V7)</p>
+-webkit-text-fill-color: transparent;" >V8 (prev version V8 beta)</p>
 </body>
 </html>
