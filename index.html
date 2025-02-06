@@ -605,6 +605,217 @@ button.dark-mode {
     box-sizing: border-box;
 }
 
+#toggle-stats {
+    animation: rainbowGlow 3s infinite; /* Apply the rainbow animation */
+    background: linear-gradient(90deg, rgb(221, 255, 0), rgb(255, 179, 0), rgb(255, 0, 0), rgb(255, 4, 4), rgb(241, 0, 0), indigo, violet);
+    background-size: 300%; /* Make the gradient larger for smoother transitions */
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#stats-buttons-container {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: white;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#hunger-button {
+    background-color: #4caf50;
+}
+
+#happiness-button {
+    background-color: #ffd700;
+}
+
+#cleanliness-button {
+    background-color: #1e90ff;
+}
+
+.stat-circle.low {
+    background-color: red !important;
+    transform: scale(1.2);
+}
+
+/* City Container */
+#city-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#city-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* City Buildings */
+.city-building {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.city-building:hover {
+    transform: scale(1.1);
+    border: 1px solid red; /* Temporary border for debugging */
+}
+
+/* Position Buildings (Adjust values as needed) */
+#apartment-building {
+    left: 20%;
+    top: 50%;
+    width: 10%;
+}
+
+#playground-building {
+    left: 50%;
+    top: 60%;
+    width: 10%;
+}
+
+#cinema-building {
+    left: 80%;
+    top: 50%;
+    width: 10%;
+}
+
+/* Hatchling */
+#city-hatchling {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    width: 5%;
+    transform: translateX(-50%);
+    transition: left 1s linear, top 1s linear;
+}
+
+
+/* Exiting Buttons Position */
+#exit-city, #exit-apartment {
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* Apartment Container */
+#apartment-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Apartment Background */
+#apartment-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hatchling in Apartment */
+#apartment-hatchling {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    width: 10%; /* Adjust size as needed */
+    transform: translateX(-50%);
+    z-index: 100; /* Ensure it's above the background */
+    transition: left 1s linear, top 1s linear;
+}
+
+/* Back Button Position in Apartment */
+#exit-apartment {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 200; /* Ensure it's above other elements */
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#exit-apartment:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Apartment Objects */
+.apartment-object {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.3s;
+    z-index: 50; /* Ensure they're above the background but below the hatchling and button */
+}
+
+.apartment-object:hover {
+    transform: scale(1.1);
+}
+
+/* Position Apartment Objects */
+#tv {
+    left: 60%; /* Adjust as needed */
+    top: 40%;  /* Adjust as needed */
+    width: 15%; /* Adjust size as needed */
+}
+
+#bed {
+    left: 30%; /* Adjust as needed */
+    top: 60%;  /* Adjust as needed */
+    width: 20%; /* Adjust size as needed */
+}
+
+/* Back Button Position in City */
+#exit-city {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 999; /* Ensure it's on top of other elements */
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#exit-city:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+
 
 
     </style>
@@ -621,14 +832,15 @@ button.dark-mode {
             <div class="stat">Hunger: <span id="hunger">100</span></div>
             <div class="stat">Cleanliness: <span id="cleanliness">100</span></div>
             <div class="stat">Happiness: <span id="happiness">100</span></div>
+            <div class="stat">Sickness: <span id="sickness">100%</span></div>
             <div class="stat">Coins: <span id="coins">0</span></div>
             <div class="stat">Apples: <span id="apples">0</span></div>
+            <div class="stat">Medicine: <span id="medicine">0</span></div> <!-- Add this line for medicine -->
             <div id="golden-apples">Golden Apples: 0</div>
             <span id="luckPotionDisplay">Luck Potions: 0</span>
             <div class="stat">Level: <span id="level">1</span></div>
         </div>
         <button id="feed">Feed Apple</button>
-        <button id="open-chest">Open Chest (-10 Coins)</button>
         <button id="shower">Shower</button>
         <button id="toggle-menu">Toggle Menu</button>
         <button id="save-progress">Save Progress</button>
@@ -647,6 +859,7 @@ button.dark-mode {
     <button id="toggle-dark-mode">Toggle Dark Mode</button>
     <button id="command-jump">Jump</button>
 <button id="command-talk">Talk</button>
+<button id="toggle-stats">Toggle Stats</button>
         <button id="NTC">Notice</button>
         <button id="toggle-buttons">Toggle external buttons</button>
     </div>
@@ -708,6 +921,8 @@ button.dark-mode {
 <button id="infinite-states-button">Enable Infinite States (900,000 coins)</button>
 <button id="buyApples">5000 APPLES! (2000 coins)</button>
 <button id="open-golden-chest">Open Golden Chest (400 coins)</button>
+<button id="buy-medicine">Buy Medicine (100 Coins)</button>
+<button id="open-chest">Open Chest (-10 Coins)</button>
 
         <p id="shopFeedback"></p>
     </div>
@@ -834,11 +1049,53 @@ button.dark-mode {
 </div>
 
 
-            
+<div id="stats-buttons-container" style="display: none;">
+    <div title="hunger" id="hunger-button" class="stat-circle">🍴</div>
+    <div title="happiness" id="happiness-button" class="stat-circle">100%</div>
+    <div title="cleanliness" id="cleanliness-button" class="stat-circle">100%</div>
+</div>
+
+
+<!-- Main Game Container -->
+<div id="game-container">
+    <!-- Existing game content -->
+    <button id="go-to-city">Go to City (in beta)</button>
+</div>
+
+<!-- City Container -->
+<div id="city-container" style="display: none;">
+    <img src="./original-232adf446d5619c49c4ffb6247751762.webp" id="city-background" alt="City Background">
+
+    <!-- Buildings -->
+    <img src="Picsart_25-02-06_17-38-19-673.png" id="apartment-building" class="city-building" alt="Apartment">
+    <img src="./playground-7300196_640.webp65" id="playground-building" class="city-building" alt="Playground">
+    <img src="path/to/cinema.png" id="cinema-building" class="city-building" alt="Cinema">
+
+    <!-- Hatchling Character -->
+    <img src="./dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png" id="city-hatchling" alt="Hatchling">
+
+    <!-- Back Button -->
+    <button id="exit-city">Back</button>
+</div>
+
+<!-- Apartment Container -->
+<div id="apartment-container" style="display: none;">
+    <img src="./overall20view-ezgif.com-webp-to-jpg-converter.jpg" id="apartment-background" alt="Apartment Interior">
+
+    <!-- Interactive Objects -->
+    <img src="Picsart_25-02-06_17-39-06-464.png" id="tv" class="apartment-object" alt="TV">
+    <img src="Picsart_25-02-06_17-38-39-612.png" id="bed" class="apartment-object" alt="Bed">
+
+    <button id="exit-apartment">Back</button>
+
+    
+    <img src="./dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png" id="apartment-hatchling" alt="Hatchling">
+</div>
+
 
 
     <script>
-    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0,depositedCoins = 0;
+    let hunger = 100, cleanliness = 100, happiness = 100, coins = 0, apples = 0, level = 1, goldenApples = 0, depositedCoins = 0, sickness = 100, medicine = 0;
     let infiniteStates = false; // Initially set to false
     let stateDecrementInterval;
     let autoSaveEnabled = false; // Auto-save is disabled by default
@@ -885,23 +1142,65 @@ scriptTag.src = "https://www.youtube.com/iframe_api";
 document.body.appendChild(scriptTag);
 
 
-    function updateStats() {
-        document.getElementById('hunger').textContent = hunger;
-        document.getElementById('cleanliness').textContent = cleanliness;
-        document.getElementById('happiness').textContent = happiness;
-        document.getElementById('coins').textContent = coins;
-        document.getElementById('apples').textContent = apples;
-        document.getElementById('level').textContent = level;
-        document.getElementById('golden-apples').innerText = `Golden Apples: ${goldenApples}`; // Update golden apples
-    document.getElementById('deposited-coins').textContent = depositedCoins; 
-    updateInventory(); // Update inventory slots
+function updateStats() {
+    document.getElementById('hunger').textContent = hunger;
+    document.getElementById('cleanliness').textContent = cleanliness;
+    document.getElementById('happiness').textContent = happiness;
+    document.getElementById('coins').textContent = coins;
+    document.getElementById('apples').textContent = apples;
+    document.getElementById('level').textContent = level;
+    document.getElementById('golden-apples').innerText = `Golden Apples: ${goldenApples}`;
+    document.getElementById('deposited-coins').textContent = depositedCoins;
+    document.getElementById('sickness').textContent = `${sickness}%`;
+    document.getElementById('medicine').textContent = medicine;
+    updateInventory();
 
-        if (hunger < 10 || cleanliness < 10 || happiness < 10) {
-            document.getElementById('character').style.backgroundImage = "url('Picsart_25-01-10_00-23-56-807.png')";
-        } else {
-            document.getElementById('character').style.backgroundImage = "url('dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png')";
-        }
+    // Update the character image based on conditions
+    if (hunger < 10 || cleanliness < 10 || happiness < 10 || sickness < 20) {
+        document.getElementById('character').style.backgroundImage = "url('Picsart_25-01-10_00-23-56-807.png')";
+    } else {
+        document.getElementById('character').style.backgroundImage = "url('dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png')";
     }
+
+    // Handle sickness talking
+    if (sickness < 20) {
+        handleAutomaticTalk("Hatchling needs medicine!");
+    }
+
+    // Update Hunger Button
+    const hungerButton = document.getElementById('hunger-button');
+    hungerButton.textContent = `🍴`;
+    if (hunger < 10) {
+        hungerButton.classList.add('low');
+    } else {
+        hungerButton.classList.remove('low');
+    }
+
+    // Update Happiness Button
+    const happinessButton = document.getElementById('happiness-button');
+    happinessButton.textContent = `${happiness}%`;
+    if (happiness < 10) {
+        happinessButton.classList.add('low');
+        happinessButton.innerHTML = '<span id="happiness-icon">😢</span>';
+    } else {
+        happinessButton.classList.remove('low');
+        happinessButton.innerHTML = '<span id="happiness-icon">😊</span>';
+    }
+
+    // Update Cleanliness Button
+    const cleanlinessButton = document.getElementById('cleanliness-button');
+    cleanlinessButton.textContent = `${cleanliness}%`;
+    if (cleanliness < 10) {
+        cleanlinessButton.classList.add('low');
+    } else {
+        cleanlinessButton.classList.remove('low');
+    }
+}
+
+// Initial call to update the stats
+updateStats();
+
+    
 
     document.getElementById('feed').addEventListener('click', () => {
         if (apples > 0) {
@@ -942,7 +1241,7 @@ document.body.appendChild(scriptTag);
     document.getElementById('save-progress').addEventListener('click', () => {
     showStatus('');
     setTimeout(() => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins, quests}));
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins, quests, sickness, medicine}));
         alert('Progress saved!');
         hideStatus();
     }, 2000); // Optional delay for better UX
@@ -951,7 +1250,7 @@ document.body.appendChild(scriptTag);
 function autoSave() {
     showStatus('');
     setTimeout(() => {
-        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins, quests }));
+        localStorage.setItem('characterGame', JSON.stringify({ hunger, cleanliness, happiness, coins, apples, goldenApples, level, depositedCoins, quests, sickness, medicine }));
         console.log('Game auto-saved!'); // Replace with alert or other feedback if needed
         hideStatus();
     }, 2000); // Optional delay for better UX
@@ -975,7 +1274,9 @@ function saveProgress() {
         goldenApples, // Add golden apples
         level,
         depositedCoins,
-        quests
+        quests,
+        sickness,
+        medicine
     };
     localStorage.setItem('characterGame', JSON.stringify(progress));
 }
@@ -1000,7 +1301,8 @@ window.onload = () => {
         level = savedData.level;
         depositedCoins = savedData.depositedCoins || 0;
         quests = savedData.quests || quests;
-
+        medicine = savedData.medicine || 0; // Add medicine
+        sickness = savedData.sickness || 100; // Add sickness
         // Apply the completed quest class to completed quests
         quests.forEach(quest => {
             if (quest.completed) {
@@ -1865,16 +2167,25 @@ function updateInventory() {
         slot.innerHTML = ''; // Clear slot
         slot.removeEventListener('click', handleAppleClick); // Remove any existing click listeners
         slot.removeEventListener('click', handleGoldenAppleClick);
+        slot.removeEventListener('click', handleMedicineClick); // Remove any existing click listeners
     }
 
-    // Fill slots with apples and golden apples
-    let appleCount = apples;
+    // Fill slots with medicine, golden apples, and apples
+    let medicineCount = medicine;
     let goldenAppleCount = goldenApples;
+    let appleCount = apples;
 
     for (let i = 1; i <= 6; i++) {
         const slot = document.getElementById(`slot-${i}`);
 
-        if (goldenAppleCount > 0) {
+        if (medicineCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'PNGMEDICINE.png'; // Path to your medicine image
+            img.alt = 'Medicine';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleMedicineClick); // Add click event listener
+            medicineCount--;
+        } else if (goldenAppleCount > 0) {
             const img = document.createElement('img');
             img.src = 'images.jpg'; // Path to your golden apple image
             img.alt = 'Golden Apple';
@@ -1891,6 +2202,7 @@ function updateInventory() {
         }
     }
 }
+
 
 // Event handler for apple click
 function handleAppleClick() {
@@ -1916,6 +2228,18 @@ function handleGoldenAppleClick() {
     }
 }
 
+function handleMedicineClick() {
+    if (medicine > 0) {
+        medicine--;
+        sickness = 100; // Restore sickness to 100%
+        updateStats();
+        alert('You used medicine! Sickness is now restored.');
+    } else {
+        alert('You have no medicine!');
+    }
+}
+
+
 // No need for draggable functionality anymore, so remove related functions
 
 document.getElementById('toggle-inventory').addEventListener('click', () => {
@@ -1937,16 +2261,25 @@ function updateInventory() {
         slot.innerHTML = ''; // Clear slot
         slot.removeEventListener('click', handleAppleClick); // Remove any existing click listeners
         slot.removeEventListener('click', handleGoldenAppleClick);
+        slot.removeEventListener('click', handleMedicineClick); // Remove any existing click listeners
     }
 
-    // Fill slots with apples and golden apples
-    let appleCount = apples;
+    // Fill slots with medicine, golden apples, and apples
+    let medicineCount = medicine;
     let goldenAppleCount = goldenApples;
+    let appleCount = apples;
 
     for (let i = 1; i <= 6; i++) {
         const slot = document.getElementById(`slot-${i}`);
 
-        if (goldenAppleCount > 0) {
+        if (medicineCount > 0) {
+            const img = document.createElement('img');
+            img.src = 'PNGMEDICINE.png'; // Path to your medicine image
+            img.alt = 'Medicine';
+            slot.appendChild(img);
+            slot.addEventListener('click', handleMedicineClick); // Add click event listener
+            medicineCount--;
+        } else if (goldenAppleCount > 0) {
             const img = document.createElement('img');
             img.src = 'images.jpg'; // Path to your golden apple image
             img.alt = 'Golden Apple';
@@ -2166,7 +2499,6 @@ let vipInterval;
 document.getElementById('vip-button').addEventListener('click', () => {
     if (coins >= 14000) {
         coins -= 14000;
-        updateStats();
 
         const vipMenu = document.getElementById('vip-menu');
         vipMenu.style.display = 'block';
@@ -2174,7 +2506,6 @@ document.getElementById('vip-button').addEventListener('click', () => {
         // Start giving 20 coins every 2 seconds while the VIP menu is open
         vipInterval = setInterval(() => {
             coins += 20;
-            updateStats();
         }, 2000);
     } else {
         alert('You do not have enough coins to access the VIP menu.');
@@ -2256,12 +2587,151 @@ document.getElementById('close-talk-menu').addEventListener('click', () => {
     document.getElementById('talk-menu').style.display = 'none';
 });
 
+setInterval(() => {
+            if (sickness > 0) {
+                sickness--;
+                updateStats();
+            }
+        }, 20000);
+
+        document.getElementById('buy-medicine').addEventListener('click', () => {
+            if (coins >= 100) {
+                coins -= 100;
+                sickness = 100; // Restore sickness to 100%
+                updateStats();
+                alert('Medicine purchased! Sickness is now restored.');
+            } else {
+                alert('Not enough coins to buy medicine!');
+            }
+        });
+
+        function handleAutomaticTalk(message) {
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    messageElement.style.position = 'absolute';
+    messageElement.style.top = '10px';
+    messageElement.style.left = '50%';
+    messageElement.style.transform = 'translateX(-50%)';
+    messageElement.style.backgroundColor = '#fff';
+    messageElement.style.border = '1px solid #ccc';
+    messageElement.style.padding = '5px';
+    messageElement.style.borderRadius = '5px';
+
+    document.body.appendChild(messageElement);
+
+    // Hide the message after 3 seconds
+    setTimeout(() => {
+        document.body.removeChild(messageElement);
+    }, 3000);
+}
+
+document.getElementById('toggle-stats').addEventListener('click', () => {
+    const statusButtonsContainer = document.getElementById('stats-buttons-container');
+    statusButtonsContainer.style.display = statusButtonsContainer.style.display === 'none' ? 'flex' : 'none';
+});
+
+// Go to City
+document.getElementById('go-to-city').addEventListener('click', () => {
+    document.getElementById('game-container').style.display = 'none';
+    document.getElementById('city-container').style.display = 'block';
+    updateCityBackground(); // Update background based on time
+});
+
+// Exit City
+document.getElementById('exit-city').addEventListener('click', () => {
+    document.getElementById('city-container').style.display = 'none';
+    document.getElementById('game-container').style.display = 'block';
+});
+
+
+// Go to Apartment
+document.getElementById('apartment-building').addEventListener('click', () => {
+    document.getElementById('city-container').style.display = 'none';
+    document.getElementById('apartment-container').style.display = 'block';
+});
+
+// Exit Apartment
+document.getElementById('exit-apartment').addEventListener('click', () => {
+    document.getElementById('apartment-container').style.display = 'none';
+    document.getElementById('city-container').style.display = 'block';
+});
+
+// Watch TV
+document.getElementById('tv').addEventListener('click', () => {
+    happiness += 10;
+    if (happiness > 100) happiness = 100;
+    updateStats();
+    alert('Your hatchling is happier after watching TV!');
+});
+
+// Rest on Bed
+document.getElementById('bed').addEventListener('click', () => {
+    alert('Your hatchling has rested.');
+    // Implement any stat changes if necessary
+});
+
+const hatchling = document.getElementById('city-hatchling');
+
+document.getElementById('city-background').addEventListener('click', (event) => {
+    const cityRect = event.currentTarget.getBoundingClientRect();
+
+    // Calculate click position relative to the city background
+    const clickX = event.clientX - cityRect.left;
+    const clickY = event.clientY - cityRect.top;
+
+    // Move hatchling to click position
+    hatchling.style.left = `${clickX - hatchling.width / 2}px`;
+    hatchling.style.top = `${clickY - hatchling.height / 2}px`;
+});
+
+function updateCityBackground() {
+    const hours = new Date().getHours();
+    const cityBackground = document.getElementById('city-background');
+
+    if (hours >= 6 && hours < 18) {
+        cityBackground.src = 'original-232adf446d5619c49c4ffb6247751762.webp';
+    } else {
+        cityBackground.src = 'original-232adf446d5619c49c4ffb6247751762.webp';
+    }
+}
+
+// Update the background when entering the city
+function enterCity() {
+    document.getElementById('game-container').style.display = 'none';
+    document.getElementById('city-container').style.display = 'block';
+    updateCityBackground();
+}
+
+document.getElementById('go-to-city').addEventListener('click', enterCity);
+
+// Move Hatchling in Apartment
+const apartmentHatchling = document.getElementById('apartment-hatchling');
+
+document.getElementById('apartment-background').addEventListener('click', (event) => {
+    const apartmentRect = event.currentTarget.getBoundingClientRect();
+
+    // Calculate click position relative to the apartment background
+    const clickX = event.clientX - apartmentRect.left;
+    const clickY = event.clientY - apartmentRect.top;
+
+    // Move hatchling to click position
+    apartmentHatchling.style.left = `${clickX - apartmentHatchling.width / 2}px`;
+    apartmentHatchling.style.top = `${clickY - apartmentHatchling.height / 2}px`;
+});
+
+// Exit Apartment
+document.getElementById('exit-apartment').addEventListener('click', () => {
+    document.getElementById('apartment-container').style.display = 'none';
+    document.getElementById('city-container').style.display = 'block';
+    document.getElementById('city-background').style.display = 'block';
+});
+
 
 
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V8 (prev version V8 beta)</p>
+-webkit-text-fill-color: transparent;" >V9 beta (prev version V8)</p>
 </body>
 </html>
