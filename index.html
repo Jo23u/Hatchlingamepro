@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Talking Hatchling Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -514,7 +515,7 @@ button.dark-mode {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: hsl(0, 0%, 26%);
     border: 2px solid #ccc;
     padding: 20px;
     width: 300px;
@@ -814,9 +815,130 @@ button.dark-mode {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
+/* Cinema Container */
+#cinema-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* Initially hidden */
+    overflow: hidden;
+    z-index: 1000;
+}
 
+/* Cinema Background */
+#cinema-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
+/* Hatchling in Cinema */
+#cinema-hatchling {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    width: 10%; /* Adjust size as needed */
+    transform: translateX(-50%);
+    z-index: 101;
+}
 
+/* Movie Screen */
+#movie-screen {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 102;
+}
+
+/* Video Player Styling */
+#movie-player {
+    width: 80%;
+    height: auto;
+    border: 2px solid #fff;
+    border-radius: 10px;
+}
+
+/* Back Button */
+#exit-cinema {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 103;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#exit-cinema:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Coin Display Styling */
+#coin-display {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Ensure it appears above other elements */
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+#coin-display.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+#coin-display .coin-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+#coin-display #coin-amount {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Toggle Button Styling */
+#toggle-coin-display {
+    top: 70px; /* Adjust as needed to prevent overlap with other buttons */
+    left: 20px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#toggle-coin-display:hover {
+    background-color: #e68900;
+    transform: scale(1.05);
+}
+
+#toggle-menu {
+   position: fixed;
+   top: 50%; /* Center vertically */
+    right: 20px;
+}
 
     </style>
 </head>
@@ -839,29 +961,34 @@ button.dark-mode {
             <div id="golden-apples">Golden Apples: 0</div>
             <span id="luckPotionDisplay">Luck Potions: 0</span>
             <div class="stat">Level: <span id="level">1</span></div>
+            <p style="color: red;" >Coins stat (normal) soon going to be deleted.</p>
         </div>
-        <button id="feed">Feed Apple</button>
-        <button id="shower">Shower</button>
-        <button id="toggle-menu">Toggle Menu</button>
-        <button id="save-progress">Save Progress</button>
-        <button id="reset-data">Reset Data</button>
-        <button id="show-phone">Show Phone</button>
-        <button id="show-background">Show Background</button>
-        <button id="reset-background">Reset Background</button>
-        <button id="toggleShopMenu">Shop</button>
-        <button id="fuse-menu-button">Fuse Apples</button>
-        <button id="afkButton">Enter AFK Zone</button>
+        <button id="feed"><i class="fa-solid fa-apple-whole"></i> Feed Apple</button>
+        <button id="shower"><i class="fa-solid fa-shower"></i> Shower</button>
+        <i id="toggle-menu" class="fa-solid fa-bars"></i>
+        <button id="save-progress"><i class="fa-solid fa-check"></i> Save Progress</button>
+        <button id="reset-data"><i class="fa-solid fa-xmark"></i> Reset Data</button>
+        <button id="show-phone"><i class="fa-solid fa-mobile"></i> Show Phone</button>
+        <button id="show-background"><i class="fa-solid fa-image"></i> Show Background</button>
+        <button id="reset-background"><i class="fa-solid fa-trash"></i> Reset Background</button>
+        <!-- Button with Font Awesome Icon -->
+<button id="toggleShopMenu" class="icon-button">
+    <i class="fa-solid fa-shop"></i> Shop
+</button>
+
+        <button id="fuse-menu-button"><i class="fa-solid fa-rocket"></i> Fuse Apples</button>
+        <button id="afkButton"><i class="fa-solid fa-hourglass-start fa-spin"></i> Enter AFK Zone</button>
 <button id="closeAfkButton" style="display: none;">Close AFK Zone</button>
-<button id="toggle-deposit-menu">Deposit/Withdraw Menu
-    <button id="play-scooter-game">Play Cube Game</button>
-    <button id="toggle-inventory">Toggle Inventory</button>
-    <button id="toggle-progress-menu">Show Progress</button>
-    <button id="toggle-dark-mode">Toggle Dark Mode</button>
-    <button id="command-jump">Jump</button>
-<button id="command-talk">Talk</button>
-<button id="toggle-stats">Toggle Stats</button>
-        <button id="NTC">Notice</button>
-        <button id="toggle-buttons">Toggle external buttons</button>
+<button id="toggle-deposit-menu"><i class="fa-solid fa-building-columns"></i> Deposit/Withdraw Menu
+    <button id="play-scooter-game"><i class="fa-solid fa-gamepad"></i> Play Cube Game</button>
+    <button id="toggle-inventory"><i class="fa-solid fa-border-all"></i> Toggle Inventory</button>
+    <button id="toggle-progress-menu"><i class="fa-solid fa-bars-progress fa-bounce"></i> Show Progress</button>
+    <button id="toggle-dark-mode"><i class="fa-solid fa-moon"></i> Toggle Dark Mode</button>
+    <button id="command-jump"><i class="fa-solid fa-arrow-up fa-bounce"></i> Jump</button>
+<button id="command-talk"><i class="fa-solid fa-microphone"></i> Talk</button>
+<button id="toggle-stats"><i class="fa-solid fa-border-top-left"></i> Toggle Stats</button>
+        <button id="NTC"><i class="fa-solid fa-triangle-exclamation fa-fade"></i> Notice</button>
+        <button id="toggle-buttons"><i class="fa-solid fa-eye-slash"></i> Toggle external buttons</button>
     </div>
 
     <div class="background-menu" id="background-menu" style="display: none;">
@@ -904,7 +1031,7 @@ button.dark-mode {
     <div class="phone" id="phone">
         <p>Click below to earn apples!</p>
         <button id="earn-apples">Earn Apples</button>
-        <button onclick="copyLink()">Share link</button>
+        <button onclick="copyLink()"><i class="fa-solid fa-paperclip"></i> Share link</button>
         <button id="close-phone">Close Phone</button>
         <select id="theme-selector" onchange="changePhoneTheme(this.value)">
             <option value="classic">Classic</option>
@@ -972,6 +1099,7 @@ button.dark-mode {
     
 
 <div class="menu" id="deposit-menu" style="display: none;">
+    <i class="fa-solid fa-building-columns"></i>
     <button id="close-deposit-menu" style="float: right; font-size: 16px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">X</button>
     <p>Manage your coins:</p>
     <button id="deposit-coins">Deposit Coins</button>
@@ -1015,19 +1143,19 @@ button.dark-mode {
 </div>
 
 
-<button id="open-settings-menu">Open Settings</button>
+<button id="open-settings-menu"><i class="fa-solid fa-gear"></i> Open Settings</button>
 <div id="settings-menu" class="settings-menu" style="display: none;">
     <h2>Settings</h2>
-    <button id="mute-sounds">Mute All Sounds</button>
+    <button id="mute-sounds"><i class="fa-solid fa-volume-xmark"></i> Mute All Sounds</button>
     <div>
-        <p>Choose Background Color:</p>
+        <p><i class="fa-solid fa-palette"></i> Choose Background Color:</p>
         <input type="color" id="background-color-picker">
     </div>
     <div>
-        <p>Choose Button Color:</p>
+        <p><i class="fa-solid fa-palette"></i> Choose Button Color:</p>
         <input type="color" id="button-color-picker">
     </div>
-    <button id="vip-button" class="vip-button">Access VIP (14000 Coins)</button>
+    <button id="vip-button" class="vip-button"><i class="fa-solid fa-crown fa-flip"></i> Access VIP (14000 Coins)</button>
     <button id="close-settings-menu">Close</button>
 </div>
 
@@ -1059,7 +1187,7 @@ button.dark-mode {
 <!-- Main Game Container -->
 <div id="game-container">
     <!-- Existing game content -->
-    <button id="go-to-city">Go to City (in beta)</button>
+    <button id="go-to-city"><i class="fa-solid fa-city"></i> Go to City (in beta)</button>
 </div>
 
 <!-- City Container -->
@@ -1068,8 +1196,8 @@ button.dark-mode {
 
     <!-- Buildings -->
     <img src="Picsart_25-02-06_17-38-19-673.png" id="apartment-building" class="city-building" alt="Apartment">
-    <img src="./playground-7300196_640.webp65" id="playground-building" class="city-building" alt="Playground">
-    <img src="path/to/cinema.png" id="cinema-building" class="city-building" alt="Cinema">
+    <img src="./playground-7300196_640-ezgif.com-webp-to-jpg-converter.jpg" id="playground-building" class="city-building" alt="Playground">
+    <img src="./cinema-theatre-ezgif.com-webp-to-jpg-converter.jpg" id="cinema-building" class="city-building" alt="Cinema">
 
     <!-- Hatchling Character -->
     <img src="./dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png" id="city-hatchling" alt="Hatchling">
@@ -1091,6 +1219,40 @@ button.dark-mode {
     
     <img src="./dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png" id="apartment-hatchling" alt="Hatchling">
 </div>
+
+<!-- Cinema Container -->
+<div id="cinema-container" style="display: none;">
+    <img src="./cinema-theatre-ezgif.com-webp-to-jpg-converter.jpg" id="cinema-background" alt="Cinema Interior">
+
+    <!-- Hatchling Character in Cinema -->
+    <img src="./dcc87ta-3d556cc0-9b25-4a94-afcb-9cdffe707032.png" id="cinema-hatchling" alt="Hatchling">
+
+    <!-- Movie Screen -->
+    <div id="movie-screen">
+        <!-- You can embed a video or use an image representing a movie -->
+        <video id="movie-player" controls>
+            <source src="https://www.youtube.com/embed/EcoYI-fk6S8?si=1CQDOPy5_qzBePOG" >
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Back Button -->
+    <button id="exit-cinema">Back</button>
+</div>
+
+<div id="coin-ui">
+    <!-- Toggle Button -->
+    <button id="toggle-coin-display" class="toggle-button"><i class="fa-solid fa-money-bills"></i>Toggle Coin Display</button>
+
+    <!-- Coin Display UI -->
+    <div id="coin-display" class="coin-display">
+        <i class="fa-solid fa-coins"></i>
+        <span id="coin-amount">0</span>
+    </div>
+</div>
+
+
+
 
 
 
@@ -1153,6 +1315,7 @@ function updateStats() {
     document.getElementById('deposited-coins').textContent = depositedCoins;
     document.getElementById('sickness').textContent = `${sickness}%`;
     document.getElementById('medicine').textContent = medicine;
+    document.getElementById('coin-amount').textContent = coins;
     updateInventory();
 
     // Update the character image based on conditions
@@ -2726,12 +2889,48 @@ document.getElementById('exit-apartment').addEventListener('click', () => {
     document.getElementById('city-background').style.display = 'block';
 });
 
+// Go to Cinema
+document.getElementById('cinema-building').addEventListener('click', () => {
+    document.getElementById('city-container').style.display = 'none';
+    document.getElementById('cinema-container').style.display = 'block';
+
+    // Display the message once when entering the cinema
+    alert('Your hatchling enjoyed the movie!');
+});
+
+// Exit Cinema
+document.getElementById('exit-cinema').addEventListener('click', () => {
+    document.getElementById('cinema-container').style.display = 'none';
+    document.getElementById('city-container').style.display = 'block';
+});
+
+// Go to Cinema
+document.getElementById('cinema-building').addEventListener('click', () => {
+    document.getElementById('city-container').style.display = 'none';
+    document.getElementById('cinema-container').style.display = 'block';
+
+    // Increase happiness (optional)
+    happiness += 10; // Adjust the value as needed
+    if (happiness > 100) happiness = 100;
+    updateStats();
+
+    // Display the message once when entering the cinema
+    alert('Your hatchling enjoyed the movie!');
+});
+
+
+document.getElementById('toggle-coin-display').addEventListener('click', () => {
+    const coinDisplay = document.getElementById('coin-display');
+    coinDisplay.classList.toggle('hidden'); // Toggles the 'hidden' class
+});
+
+
 
 
 </script>
 <p style="background: #B8E1FC;
 background: radial-gradient(circle farthest-corner at center center, #B8E1FC 0%, #231421 100%);
 -webkit-background-clip: text;
--webkit-text-fill-color: transparent;" >V9 beta (prev version V8)</p>
+-webkit-text-fill-color: transparent;" >V9 style update (prev version V9 beta)</p>
 </body>
 </html>
